@@ -19,7 +19,6 @@
 #              "pwke" is a subsequence and not a substring.
 
 
-
 class Solution:
 
     def __init__(self):
@@ -90,7 +89,6 @@ class Solution:
             hash_map[alphabet] = current_index
 
         return max_length
-
 
 
 s1 = 'abcabcbb'
