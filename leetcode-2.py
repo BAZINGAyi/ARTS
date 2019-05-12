@@ -1,7 +1,9 @@
-# You are given two non-empty linked lists representing two non-negative integers.
-# The digits are stored in reverse order and each of their nodes contain a single digit.
-# Add the two numbers and return it as a linked list.
-# You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+# You are given two non-empty linked lists representing two
+# non-negative integers.
+# The digits are stored in reverse order and each of their nodes contain
+# a single digit.Add the two numbers and return it as a linked list.
+# You may assume the two numbers do not contain any leading zero,
+# except the number 0 itself.
 
 # Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
 # Output: 7 -> 0 -> 8
@@ -51,7 +53,7 @@ def two_list_sum(l1: ListNode, l2: ListNode):
         result_list = result_list.next
 
 
-def htest_case1():
+def list_test_case1():
     a1 = ListNode(2)
     a2 = ListNode(4)
     a3 = ListNode(3)
@@ -68,7 +70,7 @@ def htest_case1():
     two_list_sum(a1, b1)
 
 
-def htest_case2():
+def list_test_case2():
     a1 = ListNode(0)
     a2 = ListNode(1)
 
@@ -83,7 +85,7 @@ def htest_case2():
     two_list_sum(a1, b1)
 
 
-def htest_case3():
+def list_test_case3():
     a1 = ListNode(1)
 
     b1 = ListNode(9)
@@ -98,12 +100,12 @@ def htest_case3():
 
 if __name__ == '__main__':
 
-    htest_case1()
+    list_test_case1()
 
     print()
 
-    htest_case2()
+    list_test_case2()
 
     print()
 
-    htest_case3()
+    list_test_case3()
