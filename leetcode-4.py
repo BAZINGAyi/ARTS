@@ -12,12 +12,13 @@
 
 # 2. we need to understand the meaning of median. if length of array is odd,
 # so the median is a[len(a)/2]
-
 # if length of array is even, so the median is (a[len(a)/2 - 1] + a[len(a)/2])/2
+
 # 3. we will two sorted array nums1 and nums2 is divided into two parts.
 # nums1 was divided into nums1_left and nums1_right.
 # nums2 was divided into nums2_left and nums2_right.
 # then, guarantee the length of nums1_left add the length of nums2_left
+
 # equal length of nums1_right add the length of nums2_right.
 # so, we will found the median only have associated with the max(nums1_left)，
 # max(nums2_left),  min(nums1_right)
