@@ -83,6 +83,16 @@ class Solution:
         for current_index, alphabet in enumerate(s):
 
             if alphabet in hash_map:
+                # pointer: Jump directly to the subscript of
+                # the repeating element,
+                # omitting the deletion of the previous element.
+                # eg: pww, pointer can arrive at s[2] ignore s[0], s[1]
+
+                # max: we may meet repeating element, lead to the current
+                # pointer lees than before pointer.
+                # eg: 'pwwkewp' the first 'p' always in hashmap, when we found
+                # the last 'p' is repeated,
+                # pointer will be 1, it wrong  result
                 pointer = max(hash_map[alphabet] + 1, pointer)
 
             max_length = max(max_length, current_index - pointer + 1)
