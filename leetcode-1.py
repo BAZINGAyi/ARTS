@@ -1,4 +1,6 @@
 from typing import List
+
+
 class Solution:
 
     def __init__(self):
@@ -45,5 +47,5 @@ if __name__ == '__main__':
     nums, target = [2, 7, 11, 15], 9
     # nums, target = [3, 3], 6
     # nums, target = [3, 2, 4], 6
-    result = solution.twoSum_nums_hash(nums, target)
+    result = solution.two_sum_nums_hash(nums, target)
     print(result)
