@@ -51,20 +51,33 @@ class Solution:
         while low <= high:
 
             partition_x_length = int((low + high)/2)
-            partition_y_length = int((nums1_length + nums2_length + 1)/2) - partition_x_length
+            partition_y_length = (int((nums1_length + nums2_length + 1)/2)
+                                  - partition_x_length)
 
-            # The length of the array number1 left part is 0, so add an unreachable value
-            max_left_x_value = integer_min_value if partition_x_length == 0 else nums1[partition_x_length - 1]
-            # The length of the array number1 left part equal the length of number1, so add an unreachable value
-            min_right_x_value = integer_max_value if partition_x_length == nums1_length else nums1[partition_x_length]
+            # The length of the array number1 left part is 0,
+            # so add an unreachable value
+            max_left_x_value = (
+                integer_min_value if partition_x_length == 0
+                else nums1[partition_x_length - 1])
+            # The length of the array number1 left part equal
+            # the length of number1, so add an unreachable value
+            min_right_x_value = (
+                integer_max_value if partition_x_length == nums1_length
+                else nums1[partition_x_length])
 
-            max_left_y_value = integer_min_value if partition_y_length == 0 else nums2[partition_y_length - 1]
-            min_right_y_value = integer_max_value if partition_y_length == nums2_length else nums2[partition_y_length]
+            max_left_y_value = (
+                integer_min_value if partition_y_length == 0 else
+                nums2[partition_y_length - 1])
+            min_right_y_value = (
+                integer_max_value if partition_y_length == nums2_length
+                else nums2[partition_y_length])
 
-            if max_left_x_value <= min_right_y_value and max_left_y_value <= min_right_x_value:
+            if (max_left_x_value <= min_right_y_value and
+                    max_left_y_value <= min_right_x_value):
 
                 if (nums1_length + nums2_length) % 2 == 0:
-                    return (min(min_right_x_value, min_right_y_value) + max(max_left_x_value, max_left_y_value))/2.0
+                    return (min(min_right_x_value, min_right_y_value) + max(
+                        max_left_x_value, max_left_y_value))/2.0
                 else:
                     return max(max_left_x_value, max_left_y_value)/1.0
 
