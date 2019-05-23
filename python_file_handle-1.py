@@ -44,6 +44,30 @@ def get_lines(fp):
         #         tmp = i+1
 
 
-if __name__=="__main__":
+def handle_file():
     for line in get_lines("leetcode-7.py"):
         print(line.rstrip())
+
+# Question2: 遍历文件夹
+
+
+def print_directory_contents(s_path):
+    """
+    这个函数接收文件夹的名称作为输入参数
+    返回该文件夹中文件的路径
+    以及其包含文件夹中文件的路径
+    """
+    import os
+    for s_child in os.listdir(s_path):
+        s_child_path = os.path.join(s_path, s_child)
+        if os.path.isdir(s_child_path):
+            print_directory_contents(s_child_path)
+        else:
+            print(s_child_path)
+
+
+if __name__=="__main__":
+
+    # handle_file()
+
+    print_directory_contents('../ARTS')
