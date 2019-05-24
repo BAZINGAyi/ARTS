@@ -106,6 +106,51 @@ def find_the_largest_or_smallest_n_elements():
     print(heapq.heappop(heap))
     print(heap)
 
+# Question5: 实现一个优先队列，每次取出的操作总是优先级最高的那个
+# Answer: 使用 heapq 堆的结构
+
+
+def test_priority_queue():
+    import heapq
+
+    class PriorityQueue:
+        def __init__(self):
+            self._queue = []
+            self._index = 0
+
+        def push(self, item, priority):
+            # -priority represents sequence from high to slow, likes 5 to 1.
+            # because the heappop() always return the smallest elements
+
+            # and the index can ensures that objects of the same priority
+            #  are returned in order
+            heapq.heappush(self._queue, (-priority, self._index, item))
+            self._index += 1
+
+        def pop(self):
+            return heapq.heappop(self._queue)[-1]
+
+    class Item:
+        def __init__(self, name):
+            self.name = name
+
+        def __repr__(self):
+            return 'Item({!r})'.format(self.name)
+
+    q = PriorityQueue()
+    q.push(Item('foo'), 1)
+    q.push(Item('bar'), 5)
+    q.push(Item('spam'), 4)
+    q.push(Item('grok'), 1)
+
+    print(q.pop())
+    print(q.pop())
+    print(q.pop())
+    print(q.pop())
+
+
+
+
 
 if __name__ == '__main__':
     # assign_variable()
@@ -114,5 +159,8 @@ if __name__ == '__main__':
 
     # record_n_elements_of_files()
 
-    find_the_largest_or_smallest_n_elements()
+    # find_the_largest_or_smallest_n_elements()
+
+    test_priority_queue()
+
 
