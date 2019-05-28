@@ -205,6 +205,42 @@ def deal_ordered_dic():
     print(json.dumps(d))
 
 
+# Quesiton8: 怎样在数据字典中执行一些计算操作（比如求最小值、最大值、排序等等）?
+# Answer: 使用 zip(), sorted()
+# Notice：zip() 将字典中的 key 和 value 反转，返回的迭代器只能访问一次
+# 在普通字典上，执行数学运算，计算的值是键，不是值。进而一般需要 zip() 进行反转。
+
+def calculate_dic():
+    prices = {
+        'ACME': 45.23,
+        'AAPL': 612.78,
+        'IBM': 205.55,
+        'HPQ': 37.20,
+        'FB': 10.75
+    }
+
+    # 正常思路中，当我们需要查找当前的最大价格和最小价格时，一般还需要 key 的信息
+    # 仅能获取 value
+    min(prices.values())  # Returns 10.75
+    # 仅能获取 key
+    min(prices, key=lambda k: prices[k])  # Returns 'FB'
+    # 同时获取 key 和 value
+    min_value = prices[min(prices, key=lambda k: prices[k])]  # (10.75, 'FB')
+
+    # 使用 zip() 解决
+
+    min_price = min(zip(prices.values(), prices.keys()))
+    # min_price is (10.75, 'FB')
+
+    max_price = max(zip(prices.values(), prices.keys()))
+    # max_price is (612.78, 'AAPL')
+
+    prices_sorted = sorted(zip(prices.values(), prices.keys()))
+    # prices_sorted is [(10.75, 'FB'), (37.2, 'HPQ'),
+    #                   (45.23, 'ACME'), (205.55, 'IBM'),
+    #                   (612.78, 'AAPL')]
+
+
 if __name__ == '__main__':
     # assign_variable()
 
@@ -218,6 +254,8 @@ if __name__ == '__main__':
 
     # multidict_dict()
 
-    deal_ordered_dic()
+    # deal_ordered_dic()
+
+    calculate_dic()
 
 
