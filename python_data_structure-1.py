@@ -205,7 +205,7 @@ def deal_ordered_dic():
     print(json.dumps(d))
 
 
-# Quesiton8: 怎样在数据字典中执行一些计算操作（比如求最小值、最大值、排序等等）?
+# Question8: 怎样在数据字典中执行一些计算操作（比如求最小值、最大值、排序等等）?
 # Answer: 使用 zip(), sorted()
 # Notice：zip() 将字典中的 key 和 value 反转，返回的迭代器只能访问一次
 # 在普通字典上，执行数学运算，计算的值是键，不是值。进而一般需要 zip() 进行反转。
@@ -239,6 +239,41 @@ def calculate_dic():
     # prices_sorted is [(10.75, 'FB'), (37.2, 'HPQ'),
     #                   (45.23, 'ACME'), (205.55, 'IBM'),
     #                   (612.78, 'AAPL')]
+
+
+# Question9: 怎样在两个字典中寻寻找相同点（比如相同的键、相同的值等等）？
+# Answer: 利用字典本身提供的 keys() 和 items() 进行操作
+# Notice：
+# 1. keys（） 返回字典的 key 键集合的键视图对象，而键视图的一个很少
+# 被了解的特性就是它们也支持集合操作，比如集合并、交、差运算，而不用转换成 set.
+# 2. items() 也是一个 (键，值) 对的元素视图对象，支持集合操作。
+# 3. values() 却不支持，从某种程度上说，以原因是值视图无法保证所有的值互不相同，
+# 在执行某些操作时，会出现问题。
+
+def find_common_in_dics():
+    a = {
+        'x': 1,
+        'y': 2,
+        'z': 3
+    }
+
+    b = {
+        'w': 10,
+        'x': 11,
+        'y': 2
+    }
+
+    # Find keys in common
+    a.keys() & b.keys()  # { 'x', 'y' }
+    # Find keys in a that are not in b
+    a.keys() - b.keys()  # { 'z' }
+    # Find (key,value) pairs in common
+    a.items() & b.items()  # { ('y', 2) }
+
+    # Make a new dictionary with certain keys removed
+    c = {key: a[key] for key in a.keys() - {'z', 'w'}}
+    # c is {'x': 1, 'y': 2}
+
 
 
 if __name__ == '__main__':
