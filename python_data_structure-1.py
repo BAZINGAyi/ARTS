@@ -265,6 +265,58 @@ def find_common_in_dics():
     # c is {'x': 1, 'y': 2}
 
 
+# Question10：怎样在一个序列上面保持元素顺序的同时消除重复的值？
+def remove_repeated_elements_in_order():
+    # if the elements of objects is hashable, use generator
+    def dedupe(items):
+        seen = set()
+        for item in items:
+            if item not in seen:
+                yield item
+                seen.add(item)
+
+    a = [1, 5, 2, 1, 9, 1, 5, 10]
+    list(dedupe(a))  # [1, 5, 2, 9, 10]
+
+    # if the elements of objects is complicated type.
+    def dedupe(items, key=None):
+        seen = set()
+        for item in items:
+            val = item if key is None else key(item)
+            if val not in seen:
+                yield item
+                seen.add(val)
+
+    a = [{'x': 1, 'y': 2}, {'x': 1, 'y': 3}, {'x': 1, 'y': 2}, {'x': 2, 'y': 4}]
+    list(dedupe(a, key=lambda d: (d['x'], d['y'])))
+    # [{'x': 1, 'y': 2}, {'x': 1, 'y': 3}, {'x': 2, 'y': 4}]
+    list(dedupe(a, key=lambda d: d['x']))
+    # [{'x': 1, 'y': 2}, {'x': 2, 'y': 4}]
+
+
+# Question11: 假定你要从一个记录（比如文件或其他类似格式）中的某些固定位置提取字段
+# Answer：使用 slice 对象
+
+def use_slice_to_maintain():
+    # normal write
+    record = '....................123 .......513.25 ..........'
+    cost = int(record[20:23]) * float(record[31:37])
+
+    # easier to maintain
+    SHARES = slice(20, 23)
+    PRICE = slice(31, 37)
+    cost = int(record[SHARES]) * float(record[PRICE])
+
+    s = 'HelloWorld'
+    a = slice(5, 50, 2)
+    # indices 会将 start 和 stop 缩小到合适的范围的元组,并不会出现 IndexError 的异常
+    b = a.indices(len(s))
+    print(b)
+
+    for i in range(*a.indices(len(s))):
+        print(s[i])
+
+
 if __name__ == '__main__':
     # assign_variable()
 
@@ -280,6 +332,12 @@ if __name__ == '__main__':
 
     # deal_ordered_dic()
 
-    calculate_dic()
+    # calculate_dic()
+
+    # remove_repeated_elements_in_order()
+
+    use_slice_to_maintain()
+
+
 
 
