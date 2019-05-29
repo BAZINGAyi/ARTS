@@ -1,8 +1,7 @@
-# Queston1: 现在有一个包含 N 个元素的元组或者是序列，怎样将它里面的值解压后同时赋值给 N 个变量？
+
+
+# Question1: 现在有一个包含 N 个元素的元组或者是序列，怎样将它里面的值解压后同时赋值给 N 个变量？
 # Answer: 这种解压方式适用于 元组，序列，字符串，文件对象，迭代器和生成器等确定长度的迭代对象
-from collections import OrderedDict
-
-
 def assign_variable():
     data = ['ACME', 50, 91.1, (2012, 12, 21)]
     _, shares, price, _ = data
@@ -12,8 +11,6 @@ def assign_variable():
 # Question2: 如果一个可迭代对象的元素个数超过变量个数时，会抛出一个 ValueError 。
 # 那么怎样才能从这个可迭代对象中解压出 N 个元素出来？
 # Answer: 使用星号表达式，得到可迭代的对象。适用于不确定长度的迭代对象
-
-
 def assign_variable1():
     # 计算去除首尾的平均值
     grades = [67, 89, 90, 100, 67, 55]
@@ -73,8 +70,6 @@ def record_n_elements_of_files():
 # Question4: 查找最大或者最小的 N 个元素
 # Answer:  使用堆队列 heapq 实现，原因是由于堆数据结构的特征，堆顶总是最大（或者最小）
 # 的元素，同时堆顶也就表示着优先级最高的元素。进而每次取堆顶的值，就是我们题目中所要求的。
-
-
 def find_the_largest_or_smallest_n_elements():
     import heapq
     # simple list
@@ -107,10 +102,9 @@ def find_the_largest_or_smallest_n_elements():
     print(heapq.heappop(heap))
     print(heap)
 
+
 # Question5: 实现一个优先队列，每次取出的操作总是优先级最高的那个
 # Answer: 使用 heapq 堆的结构
-
-
 def test_priority_queue():
     import heapq
 
@@ -152,7 +146,6 @@ def test_priority_queue():
 
 # Question6: 怎样实现一个键对应多个值的字典（也叫 multidict）？
 # Answer: 将多个值放入 list 或者 集合中, 或者使用 defaultdict 的数据结构
-
 def multidict_dict():
     from collections import defaultdict
 
@@ -187,9 +180,8 @@ def multidict_dict():
 
 # Question7:  你想创建一个字典，并且在迭代或序列化这个字典的时候能够控制元素的顺序。
 # Answer: 可以用 collections 中的 OrderedDict 类
-
-
 def deal_ordered_dic():
+    from collections import OrderedDict
     # 注意一个 OrderedDict 的大小是普通字典的两倍，因为内部维护着一个链表，在读取大量的
     # 数据时，需要权衡一下内存的印象。
     d = OrderedDict()
@@ -209,7 +201,6 @@ def deal_ordered_dic():
 # Answer: 使用 zip(), sorted()
 # Notice：zip() 将字典中的 key 和 value 反转，返回的迭代器只能访问一次
 # 在普通字典上，执行数学运算，计算的值是键，不是值。进而一般需要 zip() 进行反转。
-
 def calculate_dic():
     prices = {
         'ACME': 45.23,
@@ -249,7 +240,6 @@ def calculate_dic():
 # 2. items() 也是一个 (键，值) 对的元素视图对象，支持集合操作。
 # 3. values() 却不支持，从某种程度上说，以原因是值视图无法保证所有的值互不相同，
 # 在执行某些操作时，会出现问题。
-
 def find_common_in_dics():
     a = {
         'x': 1,
@@ -273,7 +263,6 @@ def find_common_in_dics():
     # Make a new dictionary with certain keys removed
     c = {key: a[key] for key in a.keys() - {'z', 'w'}}
     # c is {'x': 1, 'y': 2}
-
 
 
 if __name__ == '__main__':
