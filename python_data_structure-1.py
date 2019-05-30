@@ -296,7 +296,6 @@ def remove_repeated_elements_in_order():
 
 # Question11: 假定你要从一个记录（比如文件或其他类似格式）中的某些固定位置提取字段
 # Answer：使用 slice 对象
-
 def use_slice_to_maintain():
     # normal write
     record = '....................123 .......513.25 ..........'
@@ -315,6 +314,41 @@ def use_slice_to_maintain():
 
     for i in range(*a.indices(len(s))):
         print(s[i])
+
+
+# Question12: 怎样找出一个序列中出现次数最多的元素呢？
+# Answer: 使用 collections.Counter 的数据结构
+def find_the_most_frequent_elements():
+    words = [
+        'look', 'into', 'my', 'eyes', 'look', 'into', 'my', 'eyes',
+        'the', 'eyes', 'the', 'eyes', 'the', 'eyes', 'not', 'around', 'the',
+        'eyes', "don't", 'look', 'around', 'the', 'eyes', 'look', 'into',
+        'my', 'eyes', "you're", 'under'
+    ]
+
+    from collections import Counter
+    # Counter returns a dict
+    word_counts = Counter(words)
+    # the internal of Counter uses heap
+    top_three = word_counts.most_common(3)
+    print(top_three)  # Outputs [('eyes', 8), ('the', 5), ('look', 4)]
+
+    more_words = ['why', 'are', 'you', 'not', 'looking', 'in', 'my', 'eyes']
+    for word in more_words:
+        word_counts[word] += 1
+
+    print(word_counts['eyes'])
+
+    more_words = ['update', 'method', 'is', 'also', 'ok']
+    word_counts.update(more_words)
+
+    print(word_counts['method'])
+
+    # Counter also support math operations
+    a = Counter(words)
+    b = Counter(more_words)
+    d = a - b
+    print(d)
 
 
 if __name__ == '__main__':
@@ -336,7 +370,9 @@ if __name__ == '__main__':
 
     # remove_repeated_elements_in_order()
 
-    use_slice_to_maintain()
+    # use_slice_to_maintain()
+
+    find_the_most_frequent_elements()
 
 
 
