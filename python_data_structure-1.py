@@ -351,6 +351,37 @@ def find_the_most_frequent_elements():
     print(d)
 
 
+# Question13: 你有一个字典列表，你想根据某个或某几个字典字段来排序这个列表。
+# Answer: 使用 operator 模块中的 itemgetter 函数
+def sorted_list_items():
+    rows = [
+        {'fname': 'Brian', 'lname': 'Jones', 'uid': 1003},
+        {'fname': 'David', 'lname': 'Beazley', 'uid': 1002},
+        {'fname': 'John', 'lname': 'Cleese', 'uid': 1001},
+        {'fname': 'Big', 'lname': 'Jones', 'uid': 1004}
+    ]
+
+    from operator import itemgetter
+    # single element
+    rows_by_fname = sorted(rows, key=itemgetter('fname'))
+    rows_by_uid = sorted(rows, key=itemgetter('uid'))
+    print(rows_by_fname)
+    print(rows_by_uid)
+
+    # more elemtents
+    # itemgetter can return a tuple that includes given values
+    rows_by_lfname = sorted(rows, key=itemgetter('lname', 'fname'))
+    print(rows_by_lfname)
+
+    # we can use lambda instead of itemgetter()
+    rows_by_fname = sorted(rows, key=lambda r: r['fname'])
+    print(rows_by_fname)
+
+    # itemgetter also used to min() and max()
+    min(rows, key=itemgetter('uid'))
+    max(rows, key=itemgetter('uid'))
+
+
 if __name__ == '__main__':
     # assign_variable()
 
@@ -372,7 +403,9 @@ if __name__ == '__main__':
 
     # use_slice_to_maintain()
 
-    find_the_most_frequent_elements()
+    # find_the_most_frequent_elements()
+
+    sorted_list_items()
 
 
 
