@@ -382,6 +382,35 @@ def sorted_list_items():
     max(rows, key=itemgetter('uid'))
 
 
+# Question14: Sorting does not support native comparison objects
+# Answer: use the sorted() and custom rules for sorting
+def sorting_not_support_native_comparison_objects():
+    # method1:
+    # the internal of sorted() have a key parameter,
+    # wo can pass a callable object that can return a value. this
+    # value can be used to sort.
+
+    class User:
+        def __init__(self, user_id):
+            self.user_id = user_id
+
+        def __repr__(self):
+            return 'User({})'.format(self.user_id)
+
+    def sort_notcompare():
+        users = [User(23), User(3), User(99)]
+        print(users)
+        print(sorted(users, key=lambda u: u.user_id))
+
+    sort_notcompare()
+
+    # method2: use attrgetter()
+    users = [User(23), User(3), User(99)]
+    from operator import attrgetter
+    by_name = sorted(users, key=attrgetter('user_id'))
+    print(by_name)
+
+
 if __name__ == '__main__':
     # assign_variable()
 
@@ -405,7 +434,9 @@ if __name__ == '__main__':
 
     # find_the_most_frequent_elements()
 
-    sorted_list_items()
+    # sorted_list_items()
+
+    sorting_not_support_native_comparison_objects()
 
 
 
