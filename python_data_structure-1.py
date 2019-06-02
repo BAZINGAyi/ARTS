@@ -454,6 +454,70 @@ def group_by_function():
         print(r)
 
 
+# Question16: Filter sequence elements
+# Answer: Use list comprehensions
+
+def filter_sequence_elements():
+    mylist = [1, 4, -5, 10, -7, 2, 3, -1]
+
+    # method1: Use list comprehensions, But one potential drawback of using list
+    # comprehensions is that if input is very large, it will produce a very
+    # large result set, which takes up a lof memory.
+    filtered_list = [n for n in mylist if n > 0]
+    # [1, 4, 10, 2, 3]
+
+    # method2: If you are sensitive to memory, you can use generator expression
+    # to filter elements.
+    pos = (n for n in mylist if n > 0)
+    for x in pos:
+        print(x)
+
+    # sometimes the filter rules are complex, you can write a function and then
+    # call it.
+    values = ['1', '2', '-3', '-', '4', 'N/A', '5']
+    def is_int(val):
+        try:
+            x = int(val)
+            return True
+        except ValueError:
+            return False
+
+    ivals = list(filter(is_int, values))
+    print(ivals)
+    # Outputs ['1', '2', '-3', '4', '5']
+
+    # sometimes we need to  replace the Non-conforming value with new values.
+    mylist = [1, 4, -5, 10, -7, 2, 3, -1]
+    import math
+    filtered_list = [math.sqrt(n) for n in mylist if n > 0]
+    # [1.0, 2.0, 3.1622776601683795, 1.4142135623730951, 1.7320508075688772]
+    clip_neg = [n if n > 0 else 0 for n in mylist]
+    # [1, 4, 0, 10, 0, 2, 3, 0]
+
+    # method3: use itertools.compress(). it very useful when you need to filter
+    # a sequence with another associated sequence.
+    addresses = [
+        '5412 N CLARK',
+        '5148 N CLARK',
+        '5800 E 58TH',
+        '2122 N CLARK',
+        '5645 N RAVENSWOOD',
+        '1060 W ADDISON',
+        '4801 N BROADWAY',
+        '1039 W GRANVILLE',
+    ]
+    counts = [0, 3, 10, 4, 1, 7, 6, 1]
+    from itertools import compress
+    more5 = [n > 5 for n in counts]
+    # [False, False, True, False, False, True, True, False]
+    # compress() return a Iterator, if you want to get a list that need to
+    # list() to convert the result to a list type
+    filtered_list = list(compress(addresses, more5))
+    # ['5800 E 58TH', '1060 W ADDISON', '4801 N BROADWAY']
+
+
+
+
 if __name__ == '__main__':
     # assign_variable()
 
@@ -481,7 +545,9 @@ if __name__ == '__main__':
 
     # sorting_not_support_native_comparison_objects()
 
-    group_by_function()
+    # group_by_function()
+
+    filter_sequence_elements()
 
 
 
