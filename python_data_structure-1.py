@@ -105,7 +105,7 @@ def find_the_largest_or_smallest_n_elements():
 
 # Question5: 实现一个优先队列，每次取出的操作总是优先级最高的那个
 # Answer: 使用 heapq 堆的结构
-def test_priority_queue():
+def priority_queue():
     import heapq
 
     class PriorityQueue:
@@ -411,6 +411,49 @@ def sorting_not_support_native_comparison_objects():
     print(by_name)
 
 
+# Question15: 通过某个字段将记录分组
+# Answer: The itertools.groupby() function is very
+# useful for such data grouping operations.
+def group_by_function():
+    rows = [
+        {'address': '5412 N CLARK', 'date': '07/01/2012'},
+        {'address': '5148 N CLARK', 'date': '07/04/2012'},
+        {'address': '5800 E 58TH', 'date': '07/02/2012'},
+        {'address': '2122 N CLARK', 'date': '07/03/2012'},
+        {'address': '5645 N RAVENSWOOD', 'date': '07/02/2012'},
+        {'address': '1060 W ADDISON', 'date': '07/02/2012'},
+        {'address': '4801 N BROADWAY', 'date': '07/01/2012'},
+        {'address': '1039 W GRANVILLE', 'date': '07/04/2012'},
+    ]
+
+    from operator import itemgetter
+    from itertools import groupby
+
+    # Sort by the desired field first, This step is necessary,
+    # If the sorting is not done beforehand, the grouping function will
+    # not get the desired result.
+    rows.sort(key=itemgetter('date'))
+    # Iterate in groups
+    for date, items in groupby(rows, key=itemgetter('date')):
+        print(date)
+        for i in items:
+            print(' ', i)
+
+    # If you want to group data into a large data structure based on the date
+    # filed and allow random access, then you had better ues defaultdict() to
+    # build a multi-value dictionary. Notice, if you don't care the memory
+    # usage,this is a good way. This way it runs faster than iterating first and
+    # then iterating through the groupby() function.
+
+    from collections import defaultdict
+    rows_by_date = defaultdict(list)
+    for row in rows:
+        rows_by_date[row['date']].append(row)
+
+    for r in rows_by_date['07/01/2012']:
+        print(r)
+
+
 if __name__ == '__main__':
     # assign_variable()
 
@@ -420,7 +463,7 @@ if __name__ == '__main__':
 
     # find_the_largest_or_smallest_n_elements()
 
-    # test_priority_queue()
+    # priority_queue()
 
     # multidict_dict()
 
@@ -436,7 +479,13 @@ if __name__ == '__main__':
 
     # sorted_list_items()
 
-    sorting_not_support_native_comparison_objects()
+    # sorting_not_support_native_comparison_objects()
+
+    group_by_function()
+
+
+
+
 
 
 
