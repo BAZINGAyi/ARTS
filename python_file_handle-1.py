@@ -66,8 +66,42 @@ def print_directory_contents(s_path):
             print(s_child_path)
 
 
-if __name__=="__main__":
+def traverse_dir_method1():
+    import os
+
+    def get_files(dir, suffix):
+        res = []
+        for root, dirs, files in os.walk(dir):
+            # root: dir path
+            # dirs: dictionaries name
+            # files: file names list
+            for filename in files:
+                name, suf = os.path.splitext(filename)
+                if suf == suffix:
+                    res.append(os.path.join(root, filename))
+
+        print(res)
+
+    get_files("../ARTS", '.py')
+
+
+def traverse_dir_method2():
+    from glob import iglob
+
+    def func(fp, postfix):
+        for i in iglob(f"{fp}/**/*{postfix}", recursive=True):
+            print(i)
+
+    postfix = ".py"
+    func("../ARTS", postfix)
+
+
+if __name__ == "__main__":
 
     # handle_file()
 
-    print_directory_contents('../ARTS')
+    # print_directory_contents('../ARTS')
+
+    # traverse_dir_method1()
+
+    traverse_dir_method2()
