@@ -411,83 +411,6 @@ def sorting_not_support_native_comparison_objects():
     print(by_name)
 
 
-# Question18: 映射名称到序列元素
-# Answer: Use collections.namedtuple()
-# collections.namedtuple() is a factory method
-# on subcalss of standard tuple type.
-def mapping_sequence_elements_from_name():
-    from collections import namedtuple
-    Subscriber = namedtuple('Subscriber', ['addr', 'joined'])
-    sub = Subscriber('jonesy@example.com', '2012-10-19')
-    # Subscriber(addr='jonesy@example.com', joined='2012-10-19')
-    print(sub.addr)  # jonesy@example.com'
-    print(sub.joined)  # 2012-10-19
-
-    # Although the instance of namedtuple looks like a normal class instance,
-    # it is interchangeable with the tuple type and supports all common tuple
-    #  operations, such as indexing and decompression.
-    print(len(sub))  # 2
-    addr, joined = sub
-    print(addr)  # jonesy@example.com'
-    print(joined)  # 2012-10-19
-
-    # why we need to use namedtuple. for example, when i get a large list from
-    # database. We want to manipulate some column. Normally we use index to
-    # get it. like this:
-    records = [
-        [12.0, 2],
-        [13.0, 2],
-        [23.0, 1],
-    ]
-
-    def compute_cost(records):
-        total = 0.0
-        for rec in records:
-            total += rec[0] * rec[1]
-        return total
-
-    print(compute_cost(records))
-
-    # but we don't  know the index 0 or 1. and if we want to add columns
-    # in random order may cause error.
-    # Now, we can use the namedtuple, it is clearly.
-    records = [
-        [12.0, 2, 'michael'],
-        [13.0, 2, 'david'],
-        [23.0, 1, 'duck'],
-    ]
-    Stock = namedtuple('Stock', ['price', 'shares', 'name'])
-
-    def compute_cost(records):
-        total = 0.0
-        for rec in records:
-            s = Stock(*rec)
-            total += s.shares * s.price
-        return total
-
-    print(compute_cost(records))
-
-    # The namedtuple is unchangeable. if we want to change it, we can use the
-    # _replace() method. it will create new namedtuple object.
-    # If your goal is to define an efficient data structure that needs to update
-    # many instance properties, then naming tuples is not your best choice.
-    # At this point you should consider defining a class
-    # that contains the __slots__ method.
-    s = Stock('ACME', 100, 123.45)
-    s = s._replace(shares=75)  # Stock(name='ACME', shares=75, price=123.45)
-    # we can use it as a default value.
-    Stock = namedtuple('Stock', ['name', 'shares', 'price', 'date', 'time'])
-    # Create a prototype instance
-    stock_prototype = Stock('', 0, 0.0, None, None)
-    # Function to convert a dictionary to a Stock
-    def dict_to_stock(s):
-        return stock_prototype._replace(**s)
-    a = {'name': 'ACME', 'shares': 100, 'price': 123.45}
-    dict_to_stock(a)
-    b = {'name': 'ACME', 'shares': 100, 'price': 123.45, 'date': '12/17/2012'}
-    dict_to_stock(b)
-
-
 # Question15: 通过某个字段将记录分组
 # Answer: The itertools.groupby() function is very
 # useful for such data grouping operations.
@@ -616,6 +539,135 @@ def extract_sub_dic_from_dic():
     p2 = {key: prices[key] for key in prices.keys() & tech_names}
 
 
+# Question18: 映射名称到序列元素
+# Answer: Use collections.namedtuple()
+# collections.namedtuple() is a factory method
+# on subcalss of standard tuple type.
+def mapping_sequence_elements_from_name():
+    from collections import namedtuple
+    Subscriber = namedtuple('Subscriber', ['addr', 'joined'])
+    sub = Subscriber('jonesy@example.com', '2012-10-19')
+    # Subscriber(addr='jonesy@example.com', joined='2012-10-19')
+    print(sub.addr)  # jonesy@example.com'
+    print(sub.joined)  # 2012-10-19
+
+    # Although the instance of namedtuple looks like a normal class instance,
+    # it is interchangeable with the tuple type and supports all common tuple
+    #  operations, such as indexing and decompression.
+    print(len(sub))  # 2
+    addr, joined = sub
+    print(addr)  # jonesy@example.com'
+    print(joined)  # 2012-10-19
+
+    # why we need to use namedtuple. for example, when i get a large list from
+    # database. We want to manipulate some column. Normally we use index to
+    # get it. like this:
+    records = [
+        [12.0, 2],
+        [13.0, 2],
+        [23.0, 1],
+    ]
+
+    def compute_cost(records):
+        total = 0.0
+        for rec in records:
+            total += rec[0] * rec[1]
+        return total
+
+    print(compute_cost(records))
+
+    # but we don't  know the index 0 or 1. and if we want to add columns
+    # in random order may cause error.
+    # Now, we can use the namedtuple, it is clearly.
+    records = [
+        [12.0, 2, 'michael'],
+        [13.0, 2, 'david'],
+        [23.0, 1, 'duck'],
+    ]
+    Stock = namedtuple('Stock', ['price', 'shares', 'name'])
+
+    def compute_cost(records):
+        total = 0.0
+        for rec in records:
+            s = Stock(*rec)
+            total += s.shares * s.price
+        return total
+
+    print(compute_cost(records))
+
+    # The namedtuple is unchangeable. if we want to change it, we can use the
+    # _replace() method. it will create new namedtuple object.
+    # If your goal is to define an efficient data structure that needs to update
+    # many instance properties, then naming tuples is not your best choice.
+    # At this point you should consider defining a class
+    # that contains the __slots__ method.
+    s = Stock('ACME', 100, 123.45)
+    s = s._replace(shares=75)  # Stock(name='ACME', shares=75, price=123.45)
+    # we can use it as a default value.
+    Stock = namedtuple('Stock', ['name', 'shares', 'price', 'date', 'time'])
+    # Create a prototype instance
+    stock_prototype = Stock('', 0, 0.0, None, None)
+    # Function to convert a dictionary to a Stock
+    def dict_to_stock(s):
+        return stock_prototype._replace(**s)
+    a = {'name': 'ACME', 'shares': 100, 'price': 123.45}
+    dict_to_stock(a)
+    b = {'name': 'ACME', 'shares': 100, 'price': 123.45, 'date': '12/17/2012'}
+    dict_to_stock(b)
+
+
+# Question19: Convert and calculate data at the same time
+# Answer: Use the Generator expression
+def convert_and_calculate_data_at_the_same_time():
+    nums = [1, 2, 3, 4, 5]
+    s = sum(x * x for x in nums)
+    print(s)
+
+    # Determine if any .py files exist in a directory
+    import os
+    files = os.listdir('../ARTS')
+    if any(name.endswith('.py') for name in files):
+        print('There be python!')
+    else:
+        print('Sorry, no python.')
+
+    # Output a tuple as CSV
+    s = ('ACME', 50, 123.45)
+    print(','.join(str(x) for x in s))
+    # Data reduction across fields of a data structure
+    portfolio = [
+        {'name': 'GOOG', 'shares': 50},
+        {'name': 'YHOO', 'shares': 75},
+        {'name': 'AOL', 'shares': 20},
+        {'name': 'SCOX', 'shares': 65}
+    ]
+    min_shares = min(s['shares'] for s in portfolio)
+
+    # The above example shows you the clever syntax when a generator expression
+    # is passed to a function as a separate parameter
+    #  (you don't need to add a parenthesis). For example,
+    # the following statements are equivalent:
+    s = sum((x * x for x in nums))
+    # Explicitly passing a generator expression object
+    s = sum(x * x for x in nums)
+    # More elegant implementation, omitting parentheses
+
+    # Using a generator expression as a parameter is more efficient and elegant
+    # than creating a temporary list first. The following is the normal
+    # implementation. But it will take one more step, first create an extra list
+    # if the list is very large, It creates a huge temporary data structure
+    # that is discarded only once.
+
+    nums = [1, 2, 3, 4, 5]
+    s = sum([x * x for x in nums])
+
+    # you also can use lambda in generator
+    # Original: Returns 20
+    min_shares = min(s['shares'] for s in portfolio)
+    # Alternative: Returns {'name': 'AOL', 'shares': 20}
+    min_shares = min(portfolio, key=lambda s: s['shares'])
+
+
 if __name__ == '__main__':
     # assign_variable()
 
@@ -643,13 +695,15 @@ if __name__ == '__main__':
 
     # sorting_not_support_native_comparison_objects()
 
-    mapping_sequence_elements_from_name()
-
     # group_by_function()
 
     # filter_sequence_elements()
 
-    extract_sub_dic_from_dic()
+    # extract_sub_dic_from_dic()
+
+    # mapping_sequence_elements_from_name()
+
+    convert_and_calculate_data_at_the_same_time()
 
 
 
