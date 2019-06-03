@@ -1,5 +1,3 @@
-
-
 # Question1: 现在有一个包含 N 个元素的元组或者是序列，怎样将它里面的值解压后同时赋值给 N 个变量？
 # Answer: 这种解压方式适用于 元组，序列，字符串，文件对象，迭代器和生成器等确定长度的迭代对象
 def assign_variable():
@@ -41,6 +39,7 @@ def assign_variable1():
             do_foo(*args)
         elif tag == 'bar':
             do_bar(*args)
+
 
 # Question3: 保留最后 N 个元素
 # Answer: 使用 deque 数据结构
@@ -475,6 +474,7 @@ def filter_sequence_elements():
     # sometimes the filter rules are complex, you can write a function and then
     # call it.
     values = ['1', '2', '-3', '-', '4', 'N/A', '5']
+
     def is_int(val):
         try:
             x = int(val)
@@ -607,9 +607,11 @@ def mapping_sequence_elements_from_name():
     Stock = namedtuple('Stock', ['name', 'shares', 'price', 'date', 'time'])
     # Create a prototype instance
     stock_prototype = Stock('', 0, 0.0, None, None)
+
     # Function to convert a dictionary to a Stock
     def dict_to_stock(s):
         return stock_prototype._replace(**s)
+
     a = {'name': 'ACME', 'shares': 100, 'price': 123.45}
     dict_to_stock(a)
     b = {'name': 'ACME', 'shares': 100, 'price': 123.45, 'date': '12/17/2012'}
@@ -668,6 +670,66 @@ def convert_and_calculate_data_at_the_same_time():
     min_shares = min(portfolio, key=lambda s: s['shares'])
 
 
+# Question20: Merge multiple dictionaries or maps
+# Answer: Use the ChainMap
+def merge_multiple_dictionaries_or_maps():
+    a = {'x': 1, 'z': 3}
+    b = {'y': 2, 'z': 4}
+    from collections import ChainMap
+    c = ChainMap(a, b)
+    # For example, look for it from a dictionaries first,
+    # if you can't find it, look for it in b dictionaries.
+    print(c['x'])  # Outputs 1 (from a)
+    print(c['y'])  # Outputs 2 (from b)
+    # If a duplicate key appears, the first occurrence of the mapped value
+    # will be returned.
+    print(c['z'])  # Outputs 3 (from a)
+    list(c.keys())  # ['x', 'y', 'z']
+    list(c.values())  # [1, 2, 3]
+    # The update or delete operation of the dictionary
+    # always affects the first word in the list.
+    c['z'] = 10
+    c['w'] = 40
+    del c['x']
+    print(a)  # del c['x']
+
+    # add and query new dictionaries
+    values = ChainMap()
+    values['x'] = 1
+    # Add a new mapping
+    values = values.new_child()
+    values['x'] = 2
+    # Add a new mapping
+    values = values.new_child()
+    values['x'] = 3
+    values['x']  # 3
+    # Discard last mapping
+    values = values.parents
+    values['x']  # 2
+    # Discard last mapping
+    values = values.parents
+    values['x']  # 1
+
+    # use update() to merge dictionaries. If the original dictionary is updated,
+    # this change will not be reflected in the new merge dictionary.
+    a = {'x': 1, 'z': 3}
+    b = {'y': 2, 'z': 4}
+    merged = dict(b)
+    merged.update(a)
+    merged['x']  # 1
+    merged['y']  # 2
+    merged['z']  # 3
+    a['x'] = 13
+    merged['x']  # 1
+
+    # Use ChainMap to update.
+    a = {'x': 1, 'z': 3}
+    b = {'y': 2, 'z': 4}
+    merged = ChainMap(a, b)
+    a['x'] = 42
+    print(merged['i'])  # 42
+
+
 if __name__ == '__main__':
     # assign_variable()
 
@@ -704,7 +766,3 @@ if __name__ == '__main__':
     # mapping_sequence_elements_from_name()
 
     convert_and_calculate_data_at_the_same_time()
-
-
-
-
