@@ -105,7 +105,7 @@ def find_the_largest_or_smallest_n_elements():
 
 # Question5: 实现一个优先队列，每次取出的操作总是优先级最高的那个
 # Answer: 使用 heapq 堆的结构
-def test_priority_queue():
+def priority_queue():
     import heapq
 
     class PriorityQueue:
@@ -488,6 +488,134 @@ def mapping_sequence_elements_from_name():
     dict_to_stock(b)
 
 
+# Question15: 通过某个字段将记录分组
+# Answer: The itertools.groupby() function is very
+# useful for such data grouping operations.
+def group_by_function():
+    rows = [
+        {'address': '5412 N CLARK', 'date': '07/01/2012'},
+        {'address': '5148 N CLARK', 'date': '07/04/2012'},
+        {'address': '5800 E 58TH', 'date': '07/02/2012'},
+        {'address': '2122 N CLARK', 'date': '07/03/2012'},
+        {'address': '5645 N RAVENSWOOD', 'date': '07/02/2012'},
+        {'address': '1060 W ADDISON', 'date': '07/02/2012'},
+        {'address': '4801 N BROADWAY', 'date': '07/01/2012'},
+        {'address': '1039 W GRANVILLE', 'date': '07/04/2012'},
+    ]
+
+    from operator import itemgetter
+    from itertools import groupby
+
+    # Sort by the desired field first, This step is necessary,
+    # If the sorting is not done beforehand, the grouping function will
+    # not get the desired result.
+    rows.sort(key=itemgetter('date'))
+    # Iterate in groups
+    for date, items in groupby(rows, key=itemgetter('date')):
+        print(date)
+        for i in items:
+            print(' ', i)
+
+    # If you want to group data into a large data structure based on the date
+    # filed and allow random access, then you had better ues defaultdict() to
+    # build a multi-value dictionary. Notice, if you don't care the memory
+    # usage,this is a good way. This way it runs faster than iterating first and
+    # then iterating through the groupby() function.
+
+    from collections import defaultdict
+    rows_by_date = defaultdict(list)
+    for row in rows:
+        rows_by_date[row['date']].append(row)
+
+    for r in rows_by_date['07/01/2012']:
+        print(r)
+
+
+# Question16: Filter sequence elements
+# Answer: Use list comprehensions
+
+def filter_sequence_elements():
+    mylist = [1, 4, -5, 10, -7, 2, 3, -1]
+
+    # method1: Use list comprehensions, But one potential drawback of using list
+    # comprehensions is that if input is very large, it will produce a very
+    # large result set, which takes up a lof memory.
+    filtered_list = [n for n in mylist if n > 0]
+    # [1, 4, 10, 2, 3]
+
+    # method2: If you are sensitive to memory, you can use generator expression
+    # to filter elements.
+    pos = (n for n in mylist if n > 0)
+    for x in pos:
+        print(x)
+
+    # sometimes the filter rules are complex, you can write a function and then
+    # call it.
+    values = ['1', '2', '-3', '-', '4', 'N/A', '5']
+    def is_int(val):
+        try:
+            x = int(val)
+            return True
+        except ValueError:
+            return False
+
+    ivals = list(filter(is_int, values))
+    print(ivals)
+    # Outputs ['1', '2', '-3', '4', '5']
+
+    # sometimes we need to  replace the Non-conforming value with new values.
+    mylist = [1, 4, -5, 10, -7, 2, 3, -1]
+    import math
+    filtered_list = [math.sqrt(n) for n in mylist if n > 0]
+    # [1.0, 2.0, 3.1622776601683795, 1.4142135623730951, 1.7320508075688772]
+    clip_neg = [n if n > 0 else 0 for n in mylist]
+    # [1, 4, 0, 10, 0, 2, 3, 0]
+
+    # method3: use itertools.compress(). it very useful when you need to filter
+    # a sequence with another associated sequence.
+    addresses = [
+        '5412 N CLARK',
+        '5148 N CLARK',
+        '5800 E 58TH',
+        '2122 N CLARK',
+        '5645 N RAVENSWOOD',
+        '1060 W ADDISON',
+        '4801 N BROADWAY',
+        '1039 W GRANVILLE',
+    ]
+    counts = [0, 3, 10, 4, 1, 7, 6, 1]
+    from itertools import compress
+    more5 = [n > 5 for n in counts]
+    # [False, False, True, False, False, True, True, False]
+    # compress() return a Iterator, if you want to get a list that need to
+    # list() to convert the result to a list type
+    filtered_list = list(compress(addresses, more5))
+    # ['5800 E 58TH', '1060 W ADDISON', '4801 N BROADWAY']
+
+
+# Question17: How to extract sub-dictionary from dictionary
+# Answer: Use dictionary comprehensions
+def extract_sub_dic_from_dic():
+    prices = {
+        'ACME': 45.23,
+        'AAPL': 612.78,
+        'IBM': 205.55,
+        'HPQ': 37.20,
+        'FB': 10.75
+    }
+    # Make a dictionary of all prices over 200
+    p1 = {key: value for key, value in prices.items() if value > 200}
+    # Make a dictionary of tech stocks
+    tech_names = {'AAPL', 'IBM', 'HPQ', 'MSFT'}
+    p2 = {key: value for key, value in prices.items() if key in tech_names}
+
+    # or use dict(), but it run more slowly than Using dictionary comprehensions
+    p1 = dict((key, value) for key, value in prices.items() if value > 200)
+    # Make a dictionary of tech stocks
+    tech_names = {'AAPL', 'IBM', 'HPQ', 'MSFT'}
+    p2 = {key: prices[key] for key in prices.keys() & tech_names}
+
+
 if __name__ == '__main__':
     # assign_variable()
 
@@ -497,7 +625,7 @@ if __name__ == '__main__':
 
     # find_the_largest_or_smallest_n_elements()
 
-    # test_priority_queue()
+    # priority_queue()
 
     # multidict_dict()
 
@@ -516,6 +644,12 @@ if __name__ == '__main__':
     # sorting_not_support_native_comparison_objects()
 
     mapping_sequence_elements_from_name()
+
+    # group_by_function()
+
+    # filter_sequence_elements()
+
+    extract_sub_dic_from_dic()
 
 
 
