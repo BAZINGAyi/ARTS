@@ -56,6 +56,46 @@ def handle_list():
     print(l2)
 
 
+def delete_list():
+    # Method1: traverse in new list and delete in old list
+    a = [1, 2, 3, 4, 5, 6, 7, 8]
+    print(id(a))
+    # a[:] is new list
+    print(id(a[:]))
+    for i in a[:]:
+        if i > 5:
+            pass
+        else:
+            a.remove(i)
+        print(a)
+    print(id(a))
+
+    # Method2: filter
+    a = [1, 2, 3, 4, 5, 6, 7, 8]
+    b = filter(lambda x: x > 5, a)
+    print(list(b))
+
+    # Method3: list comprehensive
+    a = [1, 2, 3, 4, 5, 6, 7, 8]
+    b = [i for i in a if i > 5]
+    print(b)
+
+    # Method4：Reverse order deletion Because the list is always 'moved forward',
+    # it can be traversed in reverse order, even if the following elements are
+    # modified, the elements that have not been traversed and their
+    # coordinates remain unchanged.
+    a = [1, 2, 3, 4, 5, 6, 7, 8]
+    print(id(a))
+    for i in range(len(a) - 1, -1, -1):
+        print(i)
+        if a[i] > 5:
+            pass
+        else:
+            a.remove(a[i])
+    print(id(a))
+    print(a)
+
+
 # Question5: 集合的计算
 def list_math_calculate():
     # 两个 list
@@ -70,7 +110,11 @@ def list_math_calculate():
 
 if __name__ == '__main__':
     # sorted_dict()
-    handle_dict()
-    handle_string()
-    handle_list()
-    list_math_calculate()
+    # handle_dict()
+
+    # handle_string()
+
+    # handle_list()
+    delete_list()
+
+    # list_math_calculate()
