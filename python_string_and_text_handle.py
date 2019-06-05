@@ -99,10 +99,51 @@ def use_strings_with_shell_wildcards():
     print([addr for addr in addresses if fnmatchcase(addr, '54[0-9][0-9] *CLARK*')])
 
 
+# Question4: 字符串匹配和搜索
+def match_and_search_string():
+    text = 'yeah, but no, but yeah, but no, but yeah'
+    # match at start or end
+    text.startswith('yeah')
+    text.endswith('no')
+    # Search for the location of the first occurrence
+    text.find('no')
+    # complicated match
+    text1 = '11/27/2012'
+    text2 = 'Nov 27, 2012'
+    import re
+    # match() always matches from the string
+    if re.match(r'\d+/\d+/\d+', text1):
+        print('yes')
+    else:
+        print('no')
+    # findall() can matches from anywhere
+    datepat = re.compile(r'\d+/\d+/\d+')
+    text = 'Today is 11/27/2012. PyCon starts 3/13/2013.'
+    datepat.findall(text)
+
+    # Parentheses are usually used to capture packets
+    datepat = re.compile(r'(\d+)/(\d+)/(\d+)')
+    m = datepat.match('11/27/2012')
+    m.group(0)  # 11/27/2012
+    m.group(1)  # 11
+    m.group(2)  # 27
+    m.group(3)  # 2012
+    m.groups()  # ('11', '27', '2012')
+    month, day, year = m.groups()
+    # Find all matches (notice splitting into tuples)
+    datepat.findall(text)
+    for month, day, year in datepat.findall(text):
+        print('{}-{}-{}'.format(year, month, day))
+
+
 if __name__ == '__main__':
     # split_complex_string()
 
     # match_the_head_or_end()
 
-    use_strings_with_shell_wildcards()
+    # use_strings_with_shell_wildcards()
+
+    match_the_head_or_end()
+
+
 
