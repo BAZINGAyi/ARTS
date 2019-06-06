@@ -160,6 +160,29 @@ def search_and_replace_text():
     newtext, n = datepat.subn(r'\3-\1-\2', text)
     print(newtext, n)
 
+
+def search_and_replaces_text_that_is_case_insensitive():
+    import re
+    text = 'UPPER PYTHON, lower python, Mixed Python'
+    re.findall('python', text, flags=re.IGNORECASE)
+    re.sub('python', 'snake', text, flags=re.IGNORECASE)
+    # the second example That reveals a small flaw, The replacement string is
+    # not automatically consistent with the case of the matched string.
+    def matchcase(word):
+        def replace(m):
+            text = m.group()
+            if text.isupper():
+                return word.upper()
+            elif text.islower():
+                return word.lower()
+            elif text[0].isupper():
+                return word.capitalize()
+            else:
+                return word
+        return replace
+    re.sub('python', matchcase('snake'), text, flags=re.IGNORECASE)
+
+
 if __name__ == '__main__':
     # split_complex_string()
 
