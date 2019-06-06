@@ -136,6 +136,30 @@ def match_and_search_string():
         print('{}-{}-{}'.format(year, month, day))
 
 
+# Question5: search and replace string
+def search_and_replace_text():
+    # simple way
+    text = 'yeah, but no, but yeah, but no, but yeah'
+    text.replace('yeah', 'yep')
+
+    # complex way
+    text = 'Today is 11/27/2012. PyCon starts 3/13/2013.'
+    import re
+    # this sec param represents the position of the group
+    result = re.sub(r'(\d+)/(\d+)/(\d+)', r'\3-\1-\2', text)
+    print(result)
+    # you can use the callback function for more complicated situation
+    from calendar import month_abbr
+    datepat = re.compile(r'(\d+)/(\d+)/(\d+)')
+    def change_date(m):
+        # the m is match object,like the object that match() or find() returned
+        mon_name = month_abbr
+        return '{} {} {}'.format(m.group(2), mon_name, m.group(3))[int(m.group(1))]
+    datepat.sub(change_date, text)
+    # you also can get the count that how many result was replaced
+    newtext, n = datepat.subn(r'\3-\1-\2', text)
+    print(newtext, n)
+
 if __name__ == '__main__':
     # split_complex_string()
 
@@ -143,7 +167,9 @@ if __name__ == '__main__':
 
     # use_strings_with_shell_wildcards()
 
-    match_the_head_or_end()
+    # match_the_head_or_end()
+
+    search_and_replace_text()
 
 
 
