@@ -96,6 +96,22 @@ def delete_list():
     print(a)
 
 
+def list_comprehension():
+    # 求出列表所有奇数并构造新列表
+    a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    res = [i for i in a if i % 2 == 1]
+    print(res)
+
+    # 用一行python代码写出1+2+3+10248
+    from functools import reduce
+    # 1.使用sum内置求和函数
+    num = sum([1, 2, 3, 10248])
+    print(num)
+    # 2.reduce 函数
+    num1 = reduce(lambda x, y: x + y, [1, 2, 3, 10248])
+    print(num1)
+
+
 # Question5: 集合的计算
 def list_math_calculate():
     # 两个 list
@@ -108,6 +124,23 @@ def list_math_calculate():
     print(set1 | set2)
 
 
+def get_missing_letter():
+    def get_missing_letter(a):
+        s1 = set("abcdefghijklmnopqrstuvwxyz")
+        s2 = set(a.lower())
+        ret = "".join(sorted(s1 - s2))
+        return ret
+    print(get_missing_letter("python"))
+
+    # generate a-z
+    import string
+    letters = string.ascii_lowercase
+    print(letters)
+    # 方法二:
+    letters = "".join(map(chr, range(ord('a'), ord('z') + 1)))
+    print(letters)
+
+
 if __name__ == '__main__':
     # sorted_dict()
     # handle_dict()
@@ -115,6 +148,8 @@ if __name__ == '__main__':
     # handle_string()
 
     # handle_list()
-    delete_list()
+    # delete_list()
 
     # list_math_calculate()
+
+    get_missing_letter()
