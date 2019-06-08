@@ -223,6 +223,58 @@ def multi_line_matching_mode():
     comment.findall(text2)  # [' this is a\n multiline comment ']
 
 
+def match_unicode_in_regex():
+    # By default, re module have some basic support with Unicode
+    import re
+    num = re.compile('\d+')
+    # ASCII digits
+    res = num.match('123')
+    print(res.group())
+    # Arabic digits
+    res = num.match('\u0661\u0662\u0663')
+    print(res.group())
+
+    # Include the specified Unicode character in the pattern
+    arabic = re.compile('[\u0600-\u06ff\u0750-\u077f\u08a0-\u08ff]+')
+    pat = re.compile('stra\u00dfe', re.IGNORECASE)
+    s = 'straße'
+    res = pat.match(s)  # Matches
+    print(res.group())
+
+    # When performing matching and search operations, it is best to standardize
+    # and clean up all text into a standardized format. Also note some special
+    # cases, such as behavior when ignoring case matching and case conversion.
+    pat.match(s.upper())  # Doesn't match
+    print(s.upper())  # Case folds
+
+
+# Question6: delete unwanted characters in a string
+def delete_unwanted_characters_in_a_string():
+    s = ' hello world \n'
+    print(s.strip())
+    print(s.lstrip())
+    print(s.rstrip())
+
+    # Character stripping
+    t = '-----hello====='
+    print(t.lstrip('-'))
+    print(t.strip('-='))
+
+    # If you want deal space in the middle, you can replace method or regex()
+    print(s.replace(' ', ''))
+    import re
+    print(re.sub('\s+', ' ', s))
+
+    # clear space in files. This method is very efficient because it does not
+    # require all data to be read in advance to be placed in a temporary list.
+    # It just creates a generator and performs a strip operation each time it
+    # returns a row.
+    with open('leetcode-1.py') as f:
+        lines = (line.strip() for line in f)
+        for line in lines:
+            print(line)
+
+
 if __name__ == '__main__':
     # split_complex_string()
 
@@ -232,7 +284,15 @@ if __name__ == '__main__':
 
     # match_the_head_or_end()
 
-    search_and_replace_text()
+    # search_and_replace_text()
+
+    # the_shortest_match_mode()
+
+    # multi_line_matching_mode()
+
+    # match_unicode_in_regex()
+
+    delete_unwanted_characters_in_a_string()
 
 
 
