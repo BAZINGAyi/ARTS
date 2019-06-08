@@ -183,6 +183,46 @@ def search_and_replaces_text_that_is_case_insensitive():
     re.sub('python', matchcase('snake'), text, flags=re.IGNORECASE)
 
 
+def the_shortest_match_mode():
+    from mpmath import re
+    str_pat = re.compile(r'"(.*)"')
+    text1 = 'Computer says "no."'
+    str_pat.findall(text1)  # ['no.']
+
+    text2 = 'Computer says "no." Phone says "yes."'
+    # The * operator is greedy, so the match finds the longest possible match.
+    str_pat.findall(text2)  # ['no." Phone says "yes.']
+
+    # To fix that, use the '?'
+    str_pat = re.compile(r'"(.*?)"')
+    str_pat.findall(text2)
+    #  ['no.', 'yes.']
+
+
+def multi_line_matching_mode():
+    # sometimes, we need to match a string in a multi-lines.
+    import re
+    comment = re.compile(r'/\*(.*?)\*/')
+    text1 = '/* this is a comment */'
+    text2 = '''/* this is a
+    multiline comment */
+    '''
+    comment.findall(text1)  # [' this is a comment ']
+    comment.findall(text2)  # ['']
+
+    # To fix that, Ues the `(?:.|\n)` to indicate a Non-capture group.
+    # It defines a group that is only used for matching,
+    # not by individual capture or numbering.
+    comment = re.compile(r'/\*((?:.|\n)*?)\*/')
+    comment.findall(text2)  # [' this is a\n multiline comment ']
+
+    # Or you can use `re.DOTALL`, let '.' to march Any character
+    # including line breaks. But It’s best to define your own
+    # regular expression pattern.
+    comment = re.compile(r'/\*(.*?)\*/', re.DOTALL)
+    comment.findall(text2)  # [' this is a\n multiline comment ']
+
+
 if __name__ == '__main__':
     # split_complex_string()
 
