@@ -314,6 +314,46 @@ def clean_text_string():
     print(c)
 
 
+# Question6: convert  "123" of string  to 123 of int
+def convert_string_to_int():
+    # Method1: Use the str()
+    def atoi(s):
+        num = 0
+        for v in s:
+            for j in range(10):
+                if v == str(j):
+                    num = num * 10 + j
+
+    # Method2: use ord()
+    def atoi_1(s):
+        num = 0
+        for v in s:
+            num = num * 10 + ord(v) + ord('0')
+        return num
+
+    # Method3: use eval()
+    def atoi_2(s):
+        num = 0
+        for v in s:
+            t = "%s * 1" % v
+            n = eval(t)
+            num = num * 10 + n
+        return num
+
+    # Method4: use reduce:
+    from functools import reduce
+
+    def sum_x_y(x, y):
+        return x * 10 + ord(y) - ord('0')
+
+    def atoi_3(s):
+        return reduce(sum_x_y, s, 0)
+
+    # lamba Anonymous functions
+    def atoi_4(s):
+        return reduce(lambda x, y: x * 10 + ord(y) - ord('0'), s, 0)
+
+
 if __name__ == '__main__':
     # split_complex_string()
 
@@ -333,7 +373,9 @@ if __name__ == '__main__':
 
     # delete_unwanted_characters_in_a_string()
 
-    clean_text_string()
+    # clean_text_string()
+
+    convert_string_to_int()
 
 
 
