@@ -275,6 +275,45 @@ def delete_unwanted_characters_in_a_string():
             print(line)
 
 
+def clean_text_string():
+    # some boring childish hackers enter the text "pýtĥöñ" in your website
+    # page form, and then you want to clean them up.
+    s = 'pýtĥöñ\fis\tawesome\r\n'
+    remap = {
+    ord('\t'): ' ',
+    ord('\f'): ' ',
+    ord('\r'): None  # Deleted
+    }
+    a = s.translate(remap)
+    print(a)
+
+    import unicodedata
+    import sys
+    cmb_chrs = dict.fromkeys(
+        c for c in range(sys.maxunicode)if unicodedata.combining(chr(c)))
+    print(cmb_chrs)
+    b = unicodedata.normalize('NFD', a)
+    print(b)
+    c = b.translate(cmb_chrs)
+    print(c)
+
+    # mapping unicode character to ASCII
+    digitmap = {c: ord('0') + unicodedata.digit(chr(c))
+                for c in range(sys.maxunicode)
+                if unicodedata.category(chr(c)) == 'Nd'}
+    print(digitmap)
+    print(len(digitmap))
+
+    # Arabic digits
+    x = '\u0661\u0662\u0663'
+    print(x.translate(digitmap))
+
+    # use I/O encode() and decode()
+    b = unicodedata.normalize('NFD', a)
+    c = b.encode('ascii', 'ignore').decode('ascii')
+    print(c)
+
+
 if __name__ == '__main__':
     # split_complex_string()
 
@@ -292,7 +331,9 @@ if __name__ == '__main__':
 
     # match_unicode_in_regex()
 
-    delete_unwanted_characters_in_a_string()
+    # delete_unwanted_characters_in_a_string()
+
+    clean_text_string()
 
 
 
