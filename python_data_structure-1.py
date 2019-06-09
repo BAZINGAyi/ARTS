@@ -217,8 +217,7 @@ def calculate_dic():
     # 同时获取 key 和 value
     min_value = prices[min(prices, key=lambda k: prices[k])]  # (10.75, 'FB')
 
-    # 使用 zip() 解决
-
+    # 使用 zip(), 简化获取 key  value 的流程
     min_price = min(zip(prices.values(), prices.keys()))
     # min_price is (10.75, 'FB')
 
