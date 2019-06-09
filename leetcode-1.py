@@ -36,7 +36,9 @@ class Solution:
 
         for index in range(len(nums)):
             complement = target - nums[index]
-            if complement in hash_map.keys() and hash_map[complement] != index:
+            # It should contain other keys besides itself.
+            is_not_current_position = hash_map[complement] != index
+            if complement in hash_map.keys() and is_not_current_position:
                 result_list.append(index)
                 result_list.append(hash_map[complement])
                 return result_list
@@ -44,8 +46,8 @@ class Solution:
 
 if __name__ == '__main__':
     solution = Solution()
-    nums, target = [2, 7, 11, 15], 9
+    # nums, target = [2, 7, 11, 15], 9
     # nums, target = [3, 3], 6
-    # nums, target = [3, 2, 4], 6
+    nums, target = [3, 2, 4], 6
     result = solution.two_sum_nums_hash(nums, target)
     print(result)
