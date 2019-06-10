@@ -184,7 +184,7 @@ def search_and_replaces_text_that_is_case_insensitive():
 
 
 def the_shortest_match_mode():
-    from mpmath import re
+    import re
     str_pat = re.compile(r'"(.*)"')
     text1 = 'Computer says "no."'
     str_pat.findall(text1)  # ['no.']
@@ -223,31 +223,6 @@ def multi_line_matching_mode():
     comment.findall(text2)  # [' this is a\n multiline comment ']
 
 
-def match_unicode_in_regex():
-    # By default, re module have some basic support with Unicode
-    import re
-    num = re.compile('\d+')
-    # ASCII digits
-    res = num.match('123')
-    print(res.group())
-    # Arabic digits
-    res = num.match('\u0661\u0662\u0663')
-    print(res.group())
-
-    # Include the specified Unicode character in the pattern
-    arabic = re.compile('[\u0600-\u06ff\u0750-\u077f\u08a0-\u08ff]+')
-    pat = re.compile('stra\u00dfe', re.IGNORECASE)
-    s = 'straße'
-    res = pat.match(s)  # Matches
-    print(res.group())
-
-    # When performing matching and search operations, it is best to standardize
-    # and clean up all text into a standardized format. Also note some special
-    # cases, such as behavior when ignoring case matching and case conversion.
-    pat.match(s.upper())  # Doesn't match
-    print(s.upper())  # Case folds
-
-
 # Question6: delete unwanted characters in a string
 def delete_unwanted_characters_in_a_string():
     s = ' hello world \n'
@@ -273,6 +248,115 @@ def delete_unwanted_characters_in_a_string():
         lines = (line.strip() for line in f)
         for line in lines:
             print(line)
+
+
+# Question7: convert  "123" of string  to 123 of int
+def convert_string_to_int():
+    # Method1: Use the str()
+    def atoi(s):
+        num = 0
+        for v in s:
+            for j in range(10):
+                if v == str(j):
+                    num = num * 10 + j
+
+    # Method2: use ord()
+    def atoi_1(s):
+        num = 0
+        for v in s:
+            num = num * 10 + ord(v) + ord('0')
+        return num
+
+    # Method3: use eval()
+    def atoi_2(s):
+        num = 0
+        for v in s:
+            t = "%s * 1" % v
+            n = eval(t)
+            num = num * 10 + n
+        return num
+
+    # Method4: use reduce:
+    from functools import reduce
+
+    def sum_x_y(x, y):
+        return x * 10 + ord(y) - ord('0')
+
+    def atoi_3(s):
+        return reduce(sum_x_y, s, 0)
+
+    # lamba Anonymous functions
+    def atoi_4(s):
+        return reduce(lambda x, y: x * 10 + ord(y) - ord('0'), s, 0)
+
+
+# Question8: Unicode processing
+def standardize_unicode_text():
+    # you're dealing with Unicode strings, you need to make sure that all
+    # strings have the same representation at the bottom.
+    # As blow, some characters can be represented by multiple legal codes.
+    # use to  overall characters ”ñ”(U+00F1) to represent
+    # use to Latin letters(U+0303) to represent
+    s1 = 'Spicy Jalape\u00f1o'
+    s2 = 'Spicy Jalapen\u0303o'
+    print(s1)
+    print(s2)
+    print('s1 == s2', str(s1 == s2))
+    print(len(s1))
+    print(len(s2))
+
+    # To Fix that you can use unicodedata to standardize text
+    # NFC represents the character should be the overall composition
+    import unicodedata
+    t1 = unicodedata.normalize('NFC', s1)
+    t2 = unicodedata.normalize('NFC', s2)
+    print('t1 == t2', str(t1 == t2))
+    print('the charater type is', ascii(t1))
+    # NFD represents the character should be decomposed into multiple combined
+    # character representations
+    t3 = unicodedata.normalize('NFD', s1)
+    t4 = unicodedata.normalize('NFD', s2)
+    print('t3 == t4', str(t3 == t4))
+    print('the charater type is', ascii(t3))
+    # python also support the standardization of NFKC and NFKD, it add some
+    # compatible features to some special characters.
+    s = '\ufb01'  # A single character
+    print(s)
+    # single character
+    print(unicodedata.normalize('NFD', s))
+    # separated character
+    print(unicodedata.normalize('NFKD', s))
+    print(unicodedata.normalize('NFKC', s))
+
+    # use the tool function to check if a character is a some type of character.
+    # eg: check if the character is number and so on.
+    t1 = unicodedata.normalize('NFD', s1)
+    print(''.join(c for c in t1 if not unicodedata.combining(c)))
+
+
+def match_unicode_in_regex():
+    # By default, re module have some basic support with Unicode
+    import re
+    num = re.compile('\d+')
+    # ASCII digits
+    res = num.match('123')
+    print(res.group())
+    # Arabic digits
+    res = num.match('\u0661\u0662\u0663')
+    print(res.group())
+
+    # Include the specified Unicode character in the pattern
+    arabic = re.compile('[\u0600-\u06ff\u0750-\u077f\u08a0-\u08ff]+')
+    pat = re.compile('stra\u00dfe', re.IGNORECASE)
+    s = 'straße'
+    res = pat.match(s)  # Matches
+    print(res.group())
+
+    # When performing matching and search operations, it is best to standardize
+    # and clean up all text into a standardized format. Also note some special
+    # cases, such as behavior when ignoring case matching and case conversion.
+    pat.match(s.upper())  # Doesn't match
+    print(s.upper())  # Case folds
 
 
 def clean_text_string():
@@ -314,46 +398,6 @@ def clean_text_string():
     print(c)
 
 
-# Question6: convert  "123" of string  to 123 of int
-def convert_string_to_int():
-    # Method1: Use the str()
-    def atoi(s):
-        num = 0
-        for v in s:
-            for j in range(10):
-                if v == str(j):
-                    num = num * 10 + j
-
-    # Method2: use ord()
-    def atoi_1(s):
-        num = 0
-        for v in s:
-            num = num * 10 + ord(v) + ord('0')
-        return num
-
-    # Method3: use eval()
-    def atoi_2(s):
-        num = 0
-        for v in s:
-            t = "%s * 1" % v
-            n = eval(t)
-            num = num * 10 + n
-        return num
-
-    # Method4: use reduce:
-    from functools import reduce
-
-    def sum_x_y(x, y):
-        return x * 10 + ord(y) - ord('0')
-
-    def atoi_3(s):
-        return reduce(sum_x_y, s, 0)
-
-    # lamba Anonymous functions
-    def atoi_4(s):
-        return reduce(lambda x, y: x * 10 + ord(y) - ord('0'), s, 0)
-
-
 if __name__ == '__main__':
     # split_complex_string()
 
@@ -375,7 +419,10 @@ if __name__ == '__main__':
 
     # clean_text_string()
 
-    convert_string_to_int()
+    # convert_string_to_int()
+
+    standardize_unicode_text()
+
 
 
 
