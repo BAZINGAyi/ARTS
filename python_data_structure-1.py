@@ -324,6 +324,18 @@ def find_the_most_frequent_elements():
         'my', 'eyes', "you're", 'under'
     ]
 
+    # Method1: Use dict
+    distone = {}
+    for keyone in words:
+        if not distone.get(keyone):
+            distone[keyone] = 1
+        else:
+            distone[keyone] += 1
+    num_three = sorted(distone.items(), key=lambda x: x[1], reverse=True)[:3]
+    num_three = [x[0] for x in num_three]
+    print(num_three)
+
+    # Method2: Use Counter
     from collections import Counter
     # Counter returns a dict
     word_counts = Counter(words)
@@ -755,9 +767,9 @@ if __name__ == '__main__':
 
     # use_slice_to_maintain()
 
-    # find_the_most_frequent_elements()
+    find_the_most_frequent_elements()
 
-    sorted_list_items()
+    # sorted_list_items()
 
     # sorting_not_support_native_comparison_objects()
 
