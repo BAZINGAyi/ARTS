@@ -425,6 +425,92 @@ def string_alignment():
     # But you should prefer to use the format() method
 
 
+# Question10： Merge splicing string
+def merge_multiple_string_to_a_big_one():
+    # if the string that you want to merge is in the sequence or the iterable,
+    # you should use the join().
+    parts = ['Is', 'Chicago', 'Not', 'Chicago?']
+    print(' '.join(parts))
+    print(','.join(parts))
+    print(''.join(parts))
+    # If you are just merging a few strings,
+    # using a plus sign (+) is usually sufficient.
+    a = 'Is Chicago'
+    b = 'Not Chicago?'
+    print(a + ' ' + b)
+    print('{} {}'.format(a, b))
+    print(a + ' ' + b)
+    # Simplified version
+    a = 'Hello' 'World'
+    print(a)
+    a, b, c = 'a', 'b', 'c'
+    # Ugly
+    print(a + ':' + b + ':' + c)
+    # Still ugly
+    print(':'.join([a, b, c]))
+    # better
+    print(a, b, c, sep=':')
+
+    # But use '+' is not a good way to connect a large number of strings,
+    # because the operaton will cause memory copying and garbage collection
+    # To avoid:
+    s = ''
+    for p in parts:
+        s += p
+    # Use Generator expression to optimize
+    data = ['ACME', 50, 91.1]
+    print(','.join(str(d) for d in data))
+
+    # When mixing I/O operations and string concatenation operations,
+    # sometimes you need to study your program carefully.
+    # version1
+    # if the strings that need to connect are very small, this version is good,
+    # because the I/0 operations always slow in general.
+    str1, str2 = 'small size 1', 'small size 2'
+    with open('./test.txt', 'w+') as f:
+        f.write(str1 + str2)
+
+    # version2
+    # if the strings are very big, this version2 is more efficient. bacase it
+    # avoid to create a big temporary results and copy large amounts of memory
+    #  block data
+    str1, str2 = 'big size 1', 'big size 2'
+    with open('./test.txt', 'w+') as f:
+        f.write(str1)
+        f.write(str2)
+
+    # The last, if you want to build a lot of small strings, you can use
+    # generator expression
+    def sample():
+        yield 'Is'
+        yield 'Chicago'
+        yield 'Not'
+        yield 'Chicago?'
+    print(sample())
+
+    with open('./test.txt', 'w+') as f:
+        for part in sample():
+            f.write(part)
+
+    def combine(source, maxsize):
+        parts = []
+        size = 0
+        for part in source:
+            parts.append(part)
+            size += len(part)
+            if size > maxsize:
+                yield ' '.join(parts)
+                parts = []
+                size = 0
+        yield ' '.join(parts)
+
+    # 结合文件操作
+    print('111')
+    with open('./test.txt', 'w+') as f:
+        for part in combine(sample(), 32768):
+            print(part)
+            f.write(part)
+
 
 if __name__ == '__main__':
     # split_complex_string()
@@ -451,7 +537,9 @@ if __name__ == '__main__':
 
     # standardize_unicode_text()
 
-    string_alignment()
+    # string_alignment()
+
+    merge_multiple_string_to_a_big_one()
 
 
 
