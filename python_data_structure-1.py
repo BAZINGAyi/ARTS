@@ -359,6 +359,11 @@ def sorted_list_items():
         {'fname': 'Big', 'lname': 'Jones', 'uid': 1004}
     ]
 
+    # method1 : use magic function
+    rows_by_name = sorted(
+        rows, key=lambda e: e.__getitem__('uid'), reverse=True)
+    print(rows_by_name)
+
     from operator import itemgetter
     # single element
     rows_by_fname = sorted(rows, key=itemgetter('fname'))
@@ -752,7 +757,7 @@ if __name__ == '__main__':
 
     # find_the_most_frequent_elements()
 
-    # sorted_list_items()
+    sorted_list_items()
 
     # sorting_not_support_native_comparison_objects()
 
@@ -764,4 +769,4 @@ if __name__ == '__main__':
 
     # mapping_sequence_elements_from_name()
 
-    convert_and_calculate_data_at_the_same_time()
+    # convert_and_calculate_data_at_the_same_time()
