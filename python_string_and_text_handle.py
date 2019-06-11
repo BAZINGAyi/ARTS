@@ -398,6 +398,34 @@ def clean_text_string():
     print(c)
 
 
+# Question9: String alignment
+def string_alignment():
+    text = 'Hello World'
+    print(text.ljust(20))
+    print(text.rjust(20))
+    print(text.center(20))
+    print(text.rjust(20, '='))
+    print(text.center(20, '='))
+
+    # Use format()
+    print(format(text, '>20'))
+    print(format(text, '<20'))
+    print(format(text, '^20'))
+    print(format(text, '=>20s'))
+    print(format(text, '*^20'))
+    # Multiple values
+    print('{:>10s} {:>10s}'.format('Hello', 'World'))
+    # format number
+    x = 1.2345
+    print(format(x, '>10'))
+    print(format(x, '^10.2f'))
+
+    # you awalays look the ‘%’ to format str in the old version code
+    print('%-20s' % text)
+    # But you should prefer to use the format() method
+
+
+
 if __name__ == '__main__':
     # split_complex_string()
 
@@ -421,7 +449,9 @@ if __name__ == '__main__':
 
     # convert_string_to_int()
 
-    standardize_unicode_text()
+    # standardize_unicode_text()
+
+    string_alignment()
 
 
 
