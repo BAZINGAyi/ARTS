@@ -512,6 +512,57 @@ def merge_multiple_string_to_a_big_one():
             f.write(part)
 
 
+# Question11: insert variables in string
+def insert_variables_in_strings():
+    # Use format()
+    s = '{name} has {n} messages.'
+    print(s.format(name='Guido', n=37))
+
+    # If you want to find the variables that can be replaced in the
+    # variable domain, You can use the format_map() and the vars()
+    name = 'Guido'
+    n = 37
+    print(s.format_map(vars()))
+
+    # Use vars() to represents a object
+    class Info:
+        def __init__(self, name, n):
+            self.name = name
+            self.n = n
+
+    a = Info('Guido', 37)
+    print(s.format_map(vars(a)))
+
+    # but format() or format_map() can not solve the situation that variables
+    # lost. So we need to definite a object that includes __missing__() method
+    class safesub(dict):
+        """防止key找不到"""
+        def __missing__(self, key):
+            return '{' + key + '}'
+    del n
+    print(s.format_map(safesub(vars())))
+
+    # if the format or format_map is used a lot, you can do like this:
+    import sys
+    def sub(text):
+        # Sys._getframe(1) returns the caller's stack frame. F_locals to get
+        # local variables.
+        return text.format_map(safesub(sys._getframe(1).f_locals))
+    name = 'Guido'
+    n = 37
+    print(sub('Hello {name}'))
+    print(sub('You have {n} messages.'))
+    print(sub('Your favorite color is {color}'))
+
+    # you should prefer choose format or format_map instead of following:
+    import string
+    s = string.Template('$name has $n messages.')
+    print(s.substitute(vars()))
+
+
+
+
+
 if __name__ == '__main__':
     # split_complex_string()
 
@@ -539,7 +590,9 @@ if __name__ == '__main__':
 
     # string_alignment()
 
-    merge_multiple_string_to_a_big_one()
+    # merge_multiple_string_to_a_big_one()
+
+    insert_variables_in_strings()
 
 
 
