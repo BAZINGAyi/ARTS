@@ -560,6 +560,24 @@ def insert_variables_in_strings():
     print(s.substitute(vars()))
 
 
+# Question12: Format the string with the specified column width
+def format_string_with_the_specified_column_width():
+    s = "Look into my eyes, look into my eyes, the eyes, the eyes, \
+    the eyes, not around the eyes, don't look around the eyes, \
+    look into my eyes, you're under."
+
+    # Use the textwrap
+    import textwrap
+    print(textwrap.fill(s, 70))
+    print(textwrap.fill(s, 40))
+    print(textwrap.fill(s, 40, initial_indent='    '))
+    print(textwrap.fill(s, 40, subsequent_indent='    '))
+
+    # To get the terminal length
+    import os
+    print(os.get_terminal_size().columns)
+
+
 
 
 
