@@ -1,5 +1,3 @@
-
-
 # Question1： You need to  split a string, but the But the separator and
 # the surrounding spaces are not fixed.
 # Answer: Use regex split
@@ -39,7 +37,7 @@ def match_the_head_or_end():
     import os
     filenames = os.listdir('.')
     print(filenames)
-    res = [name for name in filenames if name.endswith(('.git', '.py')) ]
+    res = [name for name in filenames if name.endswith(('.git', '.py'))]
     print(res)
     # Check if the required file type exists
     print(any(name.endswith('.py') for name in filenames))
@@ -68,7 +66,7 @@ def use_strings_with_shell_wildcards():
     # True
     fnmatch('foo.txt', '?oo.txt')
     # True
-    fnmatch('Dat45.csv',  'Dat[0-9]*')
+    fnmatch('Dat45.csv', 'Dat[0-9]*')
     # True
     names = ['Dat1.csv', 'Dat2.csv', 'config.ini', 'foo.py']
     [name for name in names if fnmatch(name, 'Dat*.csv')]
@@ -96,7 +94,8 @@ def use_strings_with_shell_wildcards():
 
     from fnmatch import fnmatchcase
     print([addr for addr in addresses if fnmatchcase(addr, '* ST')])
-    print([addr for addr in addresses if fnmatchcase(addr, '54[0-9][0-9] *CLARK*')])
+    print([addr for addr in addresses if
+           fnmatchcase(addr, '54[0-9][0-9] *CLARK*')])
 
 
 # Question4: 字符串匹配和搜索
@@ -151,10 +150,13 @@ def search_and_replace_text():
     # you can use the callback function for more complicated situation
     from calendar import month_abbr
     datepat = re.compile(r'(\d+)/(\d+)/(\d+)')
+
     def change_date(m):
         # the m is match object,like the object that match() or find() returned
         mon_name = month_abbr
-        return '{} {} {}'.format(m.group(2), mon_name, m.group(3))[int(m.group(1))]
+        return '{} {} {}'.format(m.group(2), mon_name, m.group(3))[
+            int(m.group(1))]
+
     datepat.sub(change_date, text)
     # you also can get the count that how many result was replaced
     newtext, n = datepat.subn(r'\3-\1-\2', text)
@@ -166,6 +168,7 @@ def search_and_replaces_text_that_is_case_insensitive():
     text = 'UPPER PYTHON, lower python, Mixed Python'
     re.findall('python', text, flags=re.IGNORECASE)
     re.sub('python', 'snake', text, flags=re.IGNORECASE)
+
     # the second example That reveals a small flaw, The replacement string is
     # not automatically consistent with the case of the matched string.
     def matchcase(word):
@@ -179,7 +182,9 @@ def search_and_replaces_text_that_is_case_insensitive():
                 return word.capitalize()
             else:
                 return word
+
         return replace
+
     re.sub('python', matchcase('snake'), text, flags=re.IGNORECASE)
 
 
@@ -364,9 +369,9 @@ def clean_text_string():
     # page form, and then you want to clean them up.
     s = 'pýtĥöñ\fis\tawesome\r\n'
     remap = {
-    ord('\t'): ' ',
-    ord('\f'): ' ',
-    ord('\r'): None  # Deleted
+        ord('\t'): ' ',
+        ord('\f'): ' ',
+        ord('\r'): None  # Deleted
     }
     a = s.translate(remap)
     print(a)
@@ -374,7 +379,7 @@ def clean_text_string():
     import unicodedata
     import sys
     cmb_chrs = dict.fromkeys(
-        c for c in range(sys.maxunicode)if unicodedata.combining(chr(c)))
+        c for c in range(sys.maxunicode) if unicodedata.combining(chr(c)))
     print(cmb_chrs)
     b = unicodedata.normalize('NFD', a)
     print(b)
@@ -486,6 +491,7 @@ def merge_multiple_string_to_a_big_one():
         yield 'Chicago'
         yield 'Not'
         yield 'Chicago?'
+
     print(sample())
 
     with open('./test.txt', 'w+') as f:
@@ -537,8 +543,10 @@ def insert_variables_in_strings():
     # lost. So we need to definite a object that includes __missing__() method
     class safesub(dict):
         """防止key找不到"""
+
         def __missing__(self, key):
             return '{' + key + '}'
+
     del n
     print(s.format_map(safesub(vars())))
 
@@ -548,6 +556,7 @@ def insert_variables_in_strings():
         # Sys._getframe(1) returns the caller's stack frame. F_locals to get
         # local variables.
         return text.format_map(safesub(sys._getframe(1).f_locals))
+
     name = 'Guido'
     n = 37
     print(sub('Hello {name}'))
@@ -578,7 +587,27 @@ def format_string_with_the_specified_column_width():
     print(os.get_terminal_size().columns)
 
 
+# Question13: handle html and xml in string
+def handle_html_and_xml_in_string():
+    s = 'Elements are written as "<tag>text</tag>".'
+    import html
+    print(s)
+    print(html.escape(s))
+    print(html.escape(s, quote=False))
 
+    # If you want to deal ASCII text and add the not ASCII text into it.
+    # you can use errors='xmlcharrefreplace'
+    s = 'Spicy Jalapeño'
+    print(s.encode('ascii', errors='xmlcharrefreplace'))
+
+    # Use HTML Parser
+    s = 'Spicy &quot;Jalape&#241;o&quot.'
+    from html.parser import HTMLParser
+    p = HTMLParser()
+    print(p.unescape(s))
+    t = 'The prompt is &gt;&gt;&gt;'
+    from xml.sax.saxutils import unescape
+    print(unescape(t))
 
 
 if __name__ == '__main__':
@@ -610,8 +639,6 @@ if __name__ == '__main__':
 
     # merge_multiple_string_to_a_big_one()
 
-    insert_variables_in_strings()
+    # insert_variables_in_strings()
 
-
-
-
+    handle_html_and_xml_in_string()
