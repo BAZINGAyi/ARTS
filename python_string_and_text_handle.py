@@ -610,6 +610,90 @@ def handle_html_and_xml_in_string():
     print(unescape(t))
 
 
+# Qustion14: String token parser
+def parse_a_token_scream_from_string():
+    text = 'foo = 23 + 42 * 10'
+
+    # As usual, you would like to transfer string to a tuple list
+    tokens = [('NAME', 'foo'), ('EQ', '='), ('NUM', '23'), ('PLUS', '+'),
+              ('NUM', '42'), ('TIMES', '*'), ('NUM', '10')]
+    # To attain it, we need to  write a regex expression to match it.
+    # we use ?P<TOKENNAME> to given string a name for later use.
+    NAME = r'(?P<NAME>[a-zA-Z_][a-zA-Z_0-9]*)'
+    NUM = r'(?P<NUM>\d+)'
+    PLUS = r'(?P<PLUS>\+)'
+    TIMES = r'(?P<TIMES>\*)'
+    EQ = r'(?P<EQ>=)'
+    WS = r'(?P<WS>\s+)'
+    import re
+    master_pat = re.compile('|'.join([NAME, NUM, PLUS, TIMES, EQ, WS]))
+
+    # Use scanner() to call match method over and over again to match the text
+    scanner = master_pat.scanner('foo = 42')
+    print(scanner.match())
+    print(scanner.match())
+    print(scanner.match())
+    print(scanner.match())
+    print(scanner.match())
+    print(scanner.match())
+
+    def generate_tokens(pat, text):
+        from collections import namedtuple
+        Token = namedtuple('Token', ['type', 'value'])
+        scanner = pat.scanner(text)
+        for m in iter(scanner.match, None):
+            yield Token(m.lastgroup, m.group())
+
+    # Example use
+    for tok in generate_tokens(master_pat, 'foo = 42'):
+        print(tok)
+    print('----')
+    # Produces output
+    # Token(type='NAME', value='foo')
+    # Token(type='WS', value=' ')
+    # Token(type='EQ', value='=')
+    # Token(type='WS', value=' ')
+    # Token(type='NUM', value='42')
+
+    tokens = (tok for tok in generate_tokens(master_pat, text)
+              if tok.type != 'WS')
+    for tok in tokens:
+        print(tok)
+    print('----')
+
+    # The first important thing that you should know is you must  certain the
+    # regex expression that you write must include all the situations of text
+    # sequence. If not, the scanner will be stopped.
+    text = 'foo = 23 ? 42 * 10'
+    tokens = (tok for tok in generate_tokens(master_pat, text)
+              if tok.type != 'WS')
+    for tok in tokens:
+        print(tok)
+    print('----')
+
+    # The second thing that you should know if a pattern is sub string of a more
+    # long pattern. ：You need to make sure the long mode is written in front.
+
+    LT = r'(?P<LT><)'
+    LE = r'(?P<LE><=)'
+    EQ = r'(?P<EQ>=)'
+    master_pat = re.compile('|'.join([LE, LT, EQ])) # Correct
+    # master_pat = re.compile('|'.join([LT, LE, EQ])) # Incorrect
+
+    # And the last, you need to check the patter of sub string
+    PRINT = r'(?P<PRINT>print)'
+    NAME = r'(?P<NAME>[a-zA-Z_][a-zA-Z_0-9]*)'
+
+    master_pat = re.compile('|'.join([PRINT, NAME]))
+
+    for tok in generate_tokens(master_pat, 'printer'):
+        print(tok)
+
+    # Outputs :
+    # Token(type='PRINT', value='print')
+    # Token(type='NAME', value='er')
+
+
 if __name__ == '__main__':
     # split_complex_string()
 
@@ -641,4 +725,6 @@ if __name__ == '__main__':
 
     # insert_variables_in_strings()
 
-    handle_html_and_xml_in_string()
+    # handle_html_and_xml_in_string()
+
+    parse_a_token_scream_from_string()
