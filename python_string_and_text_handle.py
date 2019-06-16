@@ -694,6 +694,55 @@ def parse_a_token_scream_from_string():
     # Token(type='NAME', value='er')
 
 
+# Question15:  String manipulation on a byte string
+def string_manipulation_on_a_byte_string():
+    # you want delete, search and replace in the byte string
+    data = b'Hello World'
+    print(data[0:5])
+    print(data.startswith(b'Hello'))
+    print(data.split())
+    print(data.replace(b'Hello', b'Hello Cruel'))
+
+    # for array
+    data = bytearray(b'Hello World')
+    print(data[0:5])
+    print(data.startswith(b'Hello'))
+    print(data.split())
+    print(data.replace(b'Hello', b'Hello Cruel'))
+
+    # if you want use regex to match byte string, the self of regex must
+    # be a byte string
+    data = b'FOO:BAR,SPAM'
+    import re
+    print(re.split(b'[:,]', data))  # Notice: pattern as bytes
+
+    # Special for byte string
+    # the return value is int not string when we use the index
+    a = 'Hello World'
+    print(a[0])
+    b = b'Hello World'
+    print(b[0])
+    # the byte string don't have a good format print before we decode it.
+    s = b'Hello World'
+    print(s)
+    print(s.decode('ascii'))
+    # it not exists formatting for bytes string
+    print('{:10s} {:10d} {:10.2f}'.format('ACME', 100, 490.1).encode('ascii'))
+
+    # if we use byte string with file system can cause disable encoding/decoding
+    # of file names...
+    # Write a UTF-8 filename
+    with open('jalape\xf1o.txt', 'w') as f:
+        f.write('spicy')
+
+    # Get a directory listing
+    import os
+    print(os.listdir('.'))  # Text string (names are decoded))
+    # ['jalapeño.txt']
+    print(os.listdir(b'.'))  # Byte string (names left as bytes))
+    # [b'jalapen\xcc\x83o.txt']
+
+
 if __name__ == '__main__':
     # split_complex_string()
 
@@ -727,4 +776,6 @@ if __name__ == '__main__':
 
     # handle_html_and_xml_in_string()
 
-    parse_a_token_scream_from_string()
+    # parse_a_token_scream_from_string()
+
+    string_manipulation_on_a_byte_string()
