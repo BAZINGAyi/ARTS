@@ -37,5 +37,44 @@ def rounding_operation_in_floating_point_number():
     # For example, involving financial collars, you need to the decimal module
 
 
+# Question2： Perform precise floating point arithmetic
+def perform_precise_floating_point_arithmetic():
+    a = 4.2
+    b = 2.1
+    print((a + b) == 6.3)
+
+    # if you want use precise floating point arithmetic and accept some
+    # performance loss. you can use decimal module
+    from decimal import Decimal
+    a = Decimal('4.2')
+    b = Decimal('2.1')
+    print((a+b) == Decimal('6.3'))
+
+    # One of the main features of the decimal module is that it allows you to
+    # control every aspect of your calculations
+    from decimal import localcontext
+    a = Decimal('1.3')
+    b = Decimal('1.7')
+    print(a / b)
+    with localcontext() as ctx:
+        ctx.prec = 3
+        print(a / b)
+
+    with localcontext() as ctx:
+        ctx.prec = 50
+        print(a / b)
+
+    # You also have to pay attention to the effects of subtraction and the
+    # addition of large and small numbers
+    nums = [1.23e+18, 1, -1.23e+18]
+    print(sum(nums))
+
+    # To fixed it
+    import math
+    print(math.fsum(nums))
+
+
 if __name__ == '__main__':
-    rounding_operation_in_floating_point_number()
+    # rounding_operation_in_floating_point_number()
+
+    perform_precise_floating_point_arithmetic()
