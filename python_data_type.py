@@ -119,6 +119,26 @@ def list_comprehension():
     print(result)
 
 
+def merge_list():
+    # To merge these two lists, you cannot use extend.
+    def loop_merge_sort(l1, l2):
+        tmp = []
+        while len(l1) > 0 and len(l2) > 0:
+            if l1[0] < l2[0]:
+                tmp.append(l1[0])
+                del l1[0]
+            else:
+                tmp.append(l2[0])
+                del l2[0]
+        while len(l1) > 0:
+            tmp.append(l1[0])
+            del l1[0]
+        while len(l2) > 0:
+            tmp.append(l2[0])
+            del l2[0]
+        return tmp
+
+
 # Question5: 集合的计算
 def list_math_calculate():
     # 两个 list
