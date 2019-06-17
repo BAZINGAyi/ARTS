@@ -74,7 +74,46 @@ def perform_precise_floating_point_arithmetic():
     print(math.fsum(nums))
 
 
+def print_number_of_format():
+    x = 1234.56789
+    # Two decimal places of accuracy
+    print( format(x, '0.2f'))
+    # Right justified in 10 chars, one-digit accuracy
+    print(format(x, '>10.1f'))
+    # Left justified
+    print(format(x, '<10.1f'))
+    # Centered
+    format(x, '^10.1f')
+    # Inclusion of thousands separator
+    print(format(x, ','))
+    print(format(x, '0,.1f'))
+
+    # You can use index notation
+    print(format(x, 'e'))
+    print(format(x, '0.2E'))
+
+    print('The value is {:0,.2f}'.format(x))
+
+    # When the number of digits is specified, the resulting value is rounded
+    # off according to the same rules as the round() function.
+    print(format(x, '0.1f'))
+    print(format(-x, '0.1f'))
+
+    # If you need to display thousands of spaces by region, you need to
+    # investigate the functions in the locale module. You can also use the
+    # string's translate() method to exchange thousands of characters.
+    swap_separators = {ord('.'): ',', ord(','): '.'}
+    print(format(x, ',').translate(swap_separators))
+
+    # Don't use % to represents
+    print('%0.2f' % x)
+    print('%10.1f' % x)
+    print('%-10.1f' % x)
+
+
 if __name__ == '__main__':
     # rounding_operation_in_floating_point_number()
 
-    perform_precise_floating_point_arithmetic()
+    # perform_precise_floating_point_arithmetic()
+
+    print_number_of_format()
