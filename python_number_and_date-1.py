@@ -143,6 +143,50 @@ def format_or_print_the_number():
     os.chmod('.test', 0o755)
 
 
+# Question4: You have a byte string and want to extract it to an integer.
+#  Or, you need to convert a large integer to a byte string.
+def convert_or_extract_byte_string():
+    """
+     计算机中唯一存储的是字节，如果想要存储一些东西，必须将其转为字节。但字节并不是人类可以
+     读的。比如你想存储音乐，要使用 MP3，WAV 的编码方式。要存储文本，要使用 ASCII 和 UTF8
+     等编码方式。
+     比如定义一个字节码字符串 a = b'Hello World'. 使用 print 打印后，会输出
+     b`Hello World`. 但实际上，这时 python 编码之后输出的版本，真实的内容不无法阅读的
+    """
+    data = b'\x00\x124V\x00x\x90\xab\x00\xcd\xef\x01\x00#\x004'
+    # To int
+    len(data)  # 16
+    print(int.from_bytes(data, 'little'))
+    print(int.from_bytes(data, 'big'))
+    # To byte string
+    x = 94522842520747284487117727783387188
+    print(x.to_bytes(16, 'big'))
+    print(x.to_bytes(16, 'little'))
+    # you also can use the struct module, but this module have a limit with
+    # the size of  integer
+    import struct
+    hi, lo = struct.unpack('>QQ', data)
+    print((hi << 64) + lo)
+
+    # The byte order rule (little or big) only specifies the low order
+    # alignment of the bytes when constructing the integer.
+    x = 0x01020304
+    print(x.to_bytes(4, 'big'))
+    print(x.to_bytes(4, 'little'))\
+
+    # If you try to package an integer into a byte string, then it is not
+    #  appropriate and you will get an error. If you need to, you can use the
+    # int.bit_length() method to determine how many bytes are needed to store
+    #  this value.
+    x = 523 ** 23
+    print(x)
+    # x.to_bytes(16, 'little')
+    nbytes, rem = divmod(x.bit_length(), 8)
+    if rem:
+        nbytes += 1
+    print(x.to_bytes(nbytes, 'little'))
+
+
 if __name__ == '__main__':
     # rounding_operation_in_floating_point_number()
 
@@ -150,4 +194,6 @@ if __name__ == '__main__':
 
     # print_number_of_format()
 
-    format_or_print_the_number()
+    # format_or_print_the_number()
+
+    convert_or_extract_byte_string()
