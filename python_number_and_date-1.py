@@ -187,7 +187,7 @@ def convert_or_extract_byte_string():
     print(x.to_bytes(nbytes, 'little'))
 
 
-# Queston5: test gigantic and NaN
+# Question5: test gigantic and NaN
 def use_gigantic_and_NaN():
     a = float('inf')
     b = float('-inf')
@@ -225,6 +225,48 @@ def use_gigantic_and_NaN():
     print(math.isnan(c))
 
 
+# Question6: Large array operation
+def large_array_operation():
+    # Numpy is good choice
+    import numpy as np
+    ax = np.array([1, 2, 3, 4])
+    ay = np.array([5, 6, 7, 8])
+    print(ax * 2)
+    print(ax + 10)
+    print(ax + ay)
+    print(ax * ay)
+    def f(x):
+        return 3*x**2 - 2*x + 7
+    print(f(ax))
+    print(np.sqrt(ax))
+    print(np.cos(ax))
+
+    # NumPy arrays use C or Fortran language mechanisms to allocate memory.
+    # That is, they are a very large contiguous area of memory consisting of
+    # the same type of data.
+    # so construct a Two-dimensional array of floating point numbers of
+    # 1000*1000 is easy things.
+    grid = np.zeros(shape=(10000, 10000), dtype=float)
+    grid += 10
+    np.sin(grid)
+
+    # Numpy also have good index function for Multidimensional Arrays
+    a = np.array([[1, 2, 3, 4], [5, 6, 7, 8], [9, 10, 11, 12]])
+    print(a)
+    # select row 1
+    print(a[1])
+    # Select column 1
+    print(a[:, 1])
+    # Select a subregion and change it
+    print(a[1:3, 1:3])
+    a[1:3, 1:3] += 10
+    print(a)
+    # Broadcast a row vector across an operation on all rows
+    print(a + [100, 101, 102, 103])
+    # Conditional assignment on an array
+    print(np.where(a < 10, a, 10))
+
+
 if __name__ == '__main__':
     # rounding_operation_in_floating_point_number()
 
@@ -236,4 +278,6 @@ if __name__ == '__main__':
 
     # convert_or_extract_byte_string()
 
-    use_gigantic_and_NaN()
+    # use_gigantic_and_NaN()
+
+    large_array_operation()
