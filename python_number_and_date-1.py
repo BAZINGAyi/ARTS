@@ -187,6 +187,44 @@ def convert_or_extract_byte_string():
     print(x.to_bytes(nbytes, 'little'))
 
 
+# Queston5: test gigantic and NaN
+def use_gigantic_and_NaN():
+    a = float('inf')
+    b = float('-inf')
+    c = float('nan')
+    print(a)
+    print(b)
+    print(c)
+    import math
+    print(math.isinf(a))
+    print(math.isnan(c))
+
+    print(float('inf') + 45)
+    print(float('inf') * 45)
+    print(10 / float('inf'))
+
+    a = float('inf')
+    print(a/a)
+    # nan
+    b = float('-inf')
+    print(a + b)
+    # nan
+
+    # NaN values will propagate in all operations without exceptions
+    c = float('nan')
+    print(c + 23)
+    print(c - 23)
+    print(c * 23)
+    print(math.sqrt(c))
+
+    # compare nan and nan will be returned a false
+    c = float('nan')
+    d = float('nan')
+    print(c == d)
+    print(c is d)
+    print(math.isnan(c))
+
+
 if __name__ == '__main__':
     # rounding_operation_in_floating_point_number()
 
@@ -196,4 +234,6 @@ if __name__ == '__main__':
 
     # format_or_print_the_number()
 
-    convert_or_extract_byte_string()
+    # convert_or_extract_byte_string()
+
+    use_gigantic_and_NaN()
