@@ -24,5 +24,14 @@ def uses_asterisk():
     f(*[1, 2], **{'z': 3})
 
 
+# Question2: Python closures are associated with delayed binding
+def delayed_binding():
+    def multi():
+        return [lambda x: i * x for i in range(4)]
+    print([m(3) for m in multi()])
+
+
 if __name__ == '__main__':
-    uses_asterisk()
+    # uses_asterisk()
+
+    delayed_binding()
