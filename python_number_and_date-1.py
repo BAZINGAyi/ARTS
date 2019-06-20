@@ -302,6 +302,49 @@ def extract_random_elements_in_list_or_generate_some_random_elements():
     ssl.RAND_bytes()
 
 
+# Question8: Basic date and time conversion
+def basic_date_and_time_conversion():
+    # Use the datetime module, In order to perform conversions and calculations
+    # for different time units.
+    from datetime import timedelta
+    a = timedelta(days=2, hours=6)
+    b = timedelta(hours=4.5)
+    c = a + b
+    print(c.days)
+    print(c.seconds)
+    print(c.seconds/3600)
+    print(c.seconds/3600)
+
+    from datetime import datetime
+    a = datetime(2012, 9, 23)
+    print(a + timedelta(days=10))
+    b = datetime(2012, 12, 21)
+    d = b - a
+    print(d.days)
+    now = datetime.today()
+    print(now)
+    print(now + timedelta(minutes=10))
+
+    # Datetime will automatically process leap years
+    a = datetime(2012, 3, 1)
+    b = datetime(2012, 2, 28)
+    print(a - b)
+    print((a - b).days)
+    c = datetime(2013, 3, 1)
+    d = datetime(2013, 2, 28)
+    print((c - d).days)
+
+    # if you want to calculate more complicated operation, Use the dateutil
+    from dateutil.relativedelta import relativedelta
+    print(a + relativedelta(months=+1))
+    print(a + relativedelta(months=+4))
+    # Time between two dates
+    b = datetime(2012, 12, 21)
+    d = b - a
+    print(d)
+    print(d.days)
+
+
 if __name__ == '__main__':
     # rounding_operation_in_floating_point_number()
 
@@ -317,4 +360,6 @@ if __name__ == '__main__':
 
     # large_array_operation()
 
-    extract_random_elements_in_list_or_generate_some_random_elements()
+    # extract_random_elements_in_list_or_generate_some_random_elements()
+
+    basic_date_and_time_conversion()
