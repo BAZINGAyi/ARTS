@@ -267,6 +267,41 @@ def large_array_operation():
     print(np.where(a < 10, a, 10))
 
 
+# Question7: Random Choice
+def extract_random_elements_in_list_or_generate_some_random_elements():
+    # Use Mersenne Twister Algorithm
+    import random
+    values = [1, 2, 3, 4, 5, 6]
+    print(random.choice(values))
+    print(random.choice(values))
+    print(random.choice(values))
+    print(random.sample(values, 2))
+    print(random.sample(values, 3))
+
+    # Disrupt the order of the elements in the sequence
+    random.shuffle(values)
+    print(values)
+
+    # Generate random int
+    print(random.randint(0, 10))
+
+    # Generate floating number in the range of 0 to 1
+    print(random.random())
+
+    # To get random number of N
+    print(random.getrandbits(200))
+
+    # change init seed
+    random.seed()  # Seed based on system time or os.urandom()
+    random.seed(12345)  # Seed based on integer given
+    random.seed(b'bytedata')  # Seed based on byte data
+
+    # but the random packages should not use the program about Cryptography
+    # Use the ssl.RAND_bytes()
+    import ssl
+    ssl.RAND_bytes()
+
+
 if __name__ == '__main__':
     # rounding_operation_in_floating_point_number()
 
@@ -280,4 +315,6 @@ if __name__ == '__main__':
 
     # use_gigantic_and_NaN()
 
-    large_array_operation()
+    # large_array_operation()
+
+    extract_random_elements_in_list_or_generate_some_random_elements()
