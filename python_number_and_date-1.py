@@ -132,9 +132,9 @@ def format_or_print_the_number():
     # If you want to produce a unsigned value, you need to add a indicate to
     # represents the value of the most length
     x = -1234
-    print(format(2**32 + x, 'b'))
-    print(format(2**32 + x, 'b'))
-    print(format(2**32 + x, 'x'))
+    print(format(2 ** 32 + x, 'b'))
+    print(format(2 ** 32 + x, 'b'))
+    print(format(2 ** 32 + x, 'x'))
     # transfer string to int
     print(int('4d2', 16))
     print(int('10011010010', 2))
@@ -172,7 +172,7 @@ def convert_or_extract_byte_string():
     # alignment of the bytes when constructing the integer.
     x = 0x01020304
     print(x.to_bytes(4, 'big'))
-    print(x.to_bytes(4, 'little'))\
+    print(x.to_bytes(4, 'little'))
 
     # If you try to package an integer into a byte string, then it is not
     #  appropriate and you will get an error. If you need to, you can use the
@@ -204,7 +204,7 @@ def use_gigantic_and_NaN():
     print(10 / float('inf'))
 
     a = float('inf')
-    print(a/a)
+    print(a / a)
     # nan
     b = float('-inf')
     print(a + b)
@@ -235,8 +235,10 @@ def large_array_operation():
     print(ax + 10)
     print(ax + ay)
     print(ax * ay)
+
     def f(x):
-        return 3*x**2 - 2*x + 7
+        return 3 * x ** 2 - 2 * x + 7
+
     print(f(ax))
     print(np.sqrt(ax))
     print(np.cos(ax))
@@ -312,8 +314,8 @@ def basic_date_and_time_conversion():
     c = a + b
     print(c.days)
     print(c.seconds)
-    print(c.seconds/3600)
-    print(c.seconds/3600)
+    print(c.seconds / 3600)
+    print(c.seconds / 3600)
 
     from datetime import datetime
     a = datetime(2012, 9, 23)
@@ -367,7 +369,7 @@ def calculate_the_date_of_the_last_friday():
 
     datetime.today()
     print(get_previous_byday('Monday'))
-    print(get_previous_byday('Tuesday'))   # Previous week, not today
+    print(get_previous_byday('Tuesday'))  # Previous week, not today
     print(get_previous_byday('Friday'))
     print(get_previous_byday('Sunday'))
     print(get_previous_byday('Sunday', datetime(2012, 12, 21)))
@@ -387,7 +389,7 @@ def calculate_the_date_of_the_last_friday():
 
 # Question10: calculate the range of current month
 def calculate_the_range_of_current_month():
-    from datetime import datetime, date, timedelta
+    from datetime import date, timedelta
     import calendar
 
     def get_month_range(start_date=None):
@@ -403,6 +405,18 @@ def calculate_the_range_of_current_month():
     while first_day < last_day:
         print(first_day)
         first_day += a_day
+
+    # Method2:
+    def date_range(start, stop, step):
+        while start < stop:
+            yield start
+            start += step
+
+    from datetime import datetime
+    for d in date_range(datetime(2012, 9, 1),
+                        datetime(2012, 10, 1),
+                        timedelta(hours=6)):
+        print(d)
 
 
 if __name__ == '__main__':
