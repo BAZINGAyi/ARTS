@@ -361,6 +361,30 @@ def find_the_most_frequent_elements():
     print(d)
 
 
+def counts_the_number_of_occurrences_of_characters_in_string():
+    def counter_str(str_data):
+        dict_str = {}
+        for i in str_data:
+            # get(i, 0) means if get the value by the key, it will set init
+            # value when the key not exists
+            dict_str[i] = dict_str.get(i, 0) + 1
+        return dict_str
+
+    dict_str = counter_str('AABBAABBCC')
+    print(dict_str)
+    str_count_data = ""
+    for k, v in dict_str.items():
+        str_count_data += k + str(v)
+    print(str_count_data)
+
+    # Method2: Use the Counter
+    from collections import Counter
+    dict_str = Counter("AAABBCCAC").most_common()
+    print(dict_str)
+    print("".join(
+        map(lambda x: x[0] + str(x[1]), dict_str)))
+
+
 # Question13: 你有一个字典列表，你想根据某个或某几个字典字段来排序这个列表。
 # Answer: 使用 operator 模块中的 itemgetter 函数
 def sorted_list_items():
@@ -767,7 +791,8 @@ if __name__ == '__main__':
 
     # use_slice_to_maintain()
 
-    find_the_most_frequent_elements()
+    # find_the_most_frequent_elements()
+    counts_the_number_of_occurrences_of_characters_in_string()
 
     # sorted_list_items()
 
