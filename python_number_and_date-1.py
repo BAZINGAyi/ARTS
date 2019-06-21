@@ -345,6 +345,66 @@ def basic_date_and_time_conversion():
     print(d.days)
 
 
+# Question9: calculate the date of the last Friday
+def calculate_the_date_of_the_last_friday():
+    from datetime import datetime, timedelta
+
+    weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday',
+                'Friday', 'Saturday', 'Sunday']
+
+    def get_previous_byday(dayname, start_date=None):
+        if start_date is None:
+            start_date = datetime.today()
+        # what day is today?
+        day_num = start_date.weekday()
+        # The target date is what day of the week
+        day_num_target = weekdays.index(dayname)
+        days_ago = (7 + day_num - day_num_target) % 7
+        if days_ago == 0:
+            days_ago = 7
+        target_date = start_date - timedelta(days=days_ago)
+        return target_date
+
+    datetime.today()
+    print(get_previous_byday('Monday'))
+    print(get_previous_byday('Tuesday'))   # Previous week, not today
+    print(get_previous_byday('Friday'))
+    print(get_previous_byday('Sunday'))
+    print(get_previous_byday('Sunday', datetime(2012, 12, 21)))
+
+    # If you have a large of calculation about date, had better to
+    # install python-dateutil instead of it.
+    # from datetime import datetime
+    # from dateutil.relativedelta import relativedelta
+    # from dateutil.rrule import *
+    # d = datetime.now()
+    # print(d)
+    # # Next Friday
+    # print(d + relativedelta(weekday=FR))
+    # # Last Friday
+    # print(d + relativedelta(weekday=FR(-1)))
+
+
+# Question10: calculate the range of current month
+def calculate_the_range_of_current_month():
+    from datetime import datetime, date, timedelta
+    import calendar
+
+    def get_month_range(start_date=None):
+        if start_date is None:
+            start_date = date.today().replace(day=1)
+        _, days_in_month = calendar.monthrange(start_date.year,
+                                               start_date.month)
+        end_date = start_date + timedelta(days=days_in_month)
+        return (start_date, end_date)
+
+    a_day = timedelta(days=1)
+    first_day, last_day = get_month_range()
+    while first_day < last_day:
+        print(first_day)
+        first_day += a_day
+
+
 if __name__ == '__main__':
     # rounding_operation_in_floating_point_number()
 
@@ -362,4 +422,8 @@ if __name__ == '__main__':
 
     # extract_random_elements_in_list_or_generate_some_random_elements()
 
-    basic_date_and_time_conversion()
+    # basic_date_and_time_conversion()
+
+    # calculate_the_date_of_the_last_friday()
+
+    calculate_the_range_of_current_month()
