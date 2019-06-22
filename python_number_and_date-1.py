@@ -1,5 +1,8 @@
 # Question1: You want to perform a rounding operation with a specified
 # precision on a floating point number.
+import pytz as pytz
+
+
 def rounding_operation_in_floating_point_number():
     # Use the round Func
     print(round(1.23, 1))
@@ -440,6 +443,63 @@ def convert_string_to_date():
         return datetime(int(year_s), int(mon_s), int(day_s))
 
 
+# Question12: Date operation combined with time zone
+def date_operation_combined_with_time_zone():
+    # how can we get the Time zone name?
+    # Use ISO 3166 country code
+    import pytz
+    print(pytz.country_timezones['IN'])
+
+    # You have a conference call scheduled for 9:30am on December 21,2012 in
+    # Chicago. And your friend is in Bangalore, India, So what time should
+    # he attend this meeting at local time?
+    # Use the pytz module, it provided Olson Time Zone Database.
+
+    from datetime import datetime
+    from pytz import timezone
+    d = datetime(2012, 12, 21, 9, 30, 0)
+    print(d)
+
+    # Localize the date for Chicago
+    central = timezone('US/Central')
+    loc_d = central.localize(d)
+    print(loc_d)
+
+    # Once the date is localized, it can be converted to time in other time
+    # zones.
+    bang_d = loc_d.astimezone(timezone('Asia/Kolkata'))
+    print(bang_d)
+
+    # If you plan to perform calculations on a localized date, You need to pay
+    # attention to daylight saving time conversions and other details.
+    # For example, in 2013, the US standard daylight saving time began at 2:00am
+    # local time on March 13(at that time, the time skipped an hour forward).
+    # if You are performing a local calculation, you will get an error.
+    print(11)
+    d = datetime(2013, 3, 10, 1, 45)
+    loc_d = central.localize(d)
+    print(loc_d)
+    from datetime import timedelta
+    # funny why don't i get error?
+    later = loc_d + timedelta(minutes=30)
+    print(later)
+
+    # To fixed it, use the normalize()
+    from datetime import timedelta
+    later = central.normalize(loc_d + timedelta(minutes=30))
+    print(later)
+
+    # In order not to let you get confused by these， The usual strategy for
+    # handling localized dates is to convert all dates to UTC time and use it to
+    # perform all intermediate storage and operations.
+    print(loc_d)
+    import pytz
+    utc_d = loc_d.astimezone(pytz.utc)
+    print(utc_d)
+    later_utc = utc_d + timedelta(minutes=30)
+    print(later_utc.astimezone(central))
+
+
 if __name__ == '__main__':
     # rounding_operation_in_floating_point_number()
 
@@ -463,4 +523,6 @@ if __name__ == '__main__':
 
     # calculate_the_range_of_current_month()
 
-    convert_string_to_date()
+    # convert_string_to_date()
+
+    date_operation_combined_with_time_zone()
