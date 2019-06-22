@@ -419,6 +419,27 @@ def calculate_the_range_of_current_month():
         print(d)
 
 
+# Question 11: convert string to date
+def convert_string_to_date():
+    from datetime import datetime
+    text = '2012-09-20'
+    y = datetime.strptime(text, '%Y-%m-%d')
+    z = datetime.now()
+    diff = z - y
+    print(diff)
+
+    nice_z = datetime.strftime(z, '%A %B %d, %Y')
+    print(nice_z)
+
+    # The performance of strptime() is very poor, If you want to have a good
+    # Performance that can do it by yourself
+
+    from datetime import datetime
+    def parse_ymd(s):
+        year_s, mon_s, day_s = s.split('-')
+        return datetime(int(year_s), int(mon_s), int(day_s))
+
+
 if __name__ == '__main__':
     # rounding_operation_in_floating_point_number()
 
@@ -440,4 +461,6 @@ if __name__ == '__main__':
 
     # calculate_the_date_of_the_last_friday()
 
-    calculate_the_range_of_current_month()
+    # calculate_the_range_of_current_month()
+
+    convert_string_to_date()
