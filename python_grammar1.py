@@ -31,7 +31,45 @@ def delayed_binding():
     print([m(3) for m in multi()])
 
 
+# Question3: Manual traversal iterator
+def manual_traversal_iterator():
+    # you want to traverse all the list of iterator, but want not to use the for
+    def manual_iter():
+        with open('algorithm-1.py', encoding='utf-8') as f:
+            try:
+                while True:
+                    line = next(f)
+                    print(line, end='')
+            except StopIteration:
+                pass
+    manual_iter()
+    # the next() is good method, and the StopIteration represents the end of
+    # iteration.
+    # Custom end return value
+
+    with open('algorithm-1.py', encoding='utf-8') as f:
+        while True:
+            line = next(f, None)
+            if line is None:
+                break
+            print(line, end='')
+
+    items = [1, 2, 3]
+    # Get the iterator
+    it = iter(items)  # Invokes items.__iter__()
+    # Run the iterator
+    print(next(it))  # Invokes it.__next__()
+    print(next(it))  # Invokes it.__next__()
+    print(next(it))  # Invokes it.__next__()
+    try:
+        next(it)
+    except StopIteration:
+        pass
+
+
 if __name__ == '__main__':
     # uses_asterisk()
 
-    delayed_binding()
+    # delayed_binding()
+
+    manual_traversal_iterator()
