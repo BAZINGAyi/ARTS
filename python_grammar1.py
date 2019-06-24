@@ -67,9 +67,43 @@ def manual_traversal_iterator():
         pass
 
 
+# Question4: Proxy iteration
+def proxy_iteration():
+    # you build a Custom container object,it includes list, tuple, and other
+    # iterator. you want to execute iteration operation on it.
+    # Use the __iter__() method
+    class Node:
+        def __init__(self, value):
+            self._value = value
+            self._children = []
+
+        def __repr__(self):
+            return 'Node{!r}'.format(self._value)
+
+        def add_child(self, node):
+            self._children.append(node)
+
+        def __iter__(self):
+            return iter(self._children)
+
+    root = Node(0)
+    child1 = Node(1)
+    child2 = Node(2)
+    root.add_child(child1)
+    root.add_child(child2)
+    # Outputs Node(1), Node(2)
+    for ch in root:
+        print(ch)
+
+    # The use of the iter() function here simplifies the code. Iter(s) simply
+    # returns the corresponding iterator object by calling the s.__iter()
+    # method, just as len(s) calls s.__len__(). the same.
+
+
 if __name__ == '__main__':
     # uses_asterisk()
 
     # delayed_binding()
 
-    manual_traversal_iterator()
+    #manual_traversal_iterator()
+    proxy_iteration()
