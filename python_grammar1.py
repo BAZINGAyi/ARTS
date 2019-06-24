@@ -97,7 +97,42 @@ def proxy_iteration():
 
     # The use of the iter() function here simplifies the code. Iter(s) simply
     # returns the corresponding iterator object by calling the s.__iter()
-    # method, just as len(s) calls s.__len__(). the same.
+    # method, just as len(s) calls s.__len__() the same.
+
+
+# Question5: 使用生成器创建新的迭代模式
+def create_iterator_by_using_generator():
+    def frange(start, stop, increment):
+        x = start
+        while x < stop:
+            yield x
+            x += increment
+
+    for n in frange(0, 4, 0.5):
+        print(n)
+
+    print(list(frange(0, 1, 0.125)))
+
+    # A function needs a yield statement to convert it to a generator.
+    # Unlike ordinary functions, generators can only be used for iterative
+    # operations. Here is experiment that shows you the underlying working
+    # mechanism of such a function:
+
+    def countdown(n):
+        print('Starting to count from', n)
+        while n > 0:
+            yield n
+            n -= 1
+        print('Done!')
+
+    # Create the generator, notice no output appears
+    c = countdown(3)
+    # Run to first yield and emit a value
+    print(next(c))
+    print(next(c))
+    print(next(c))
+    # Have a exception, but the 'for' statement can resolve it
+    # print(next(c))
 
 
 if __name__ == '__main__':
@@ -105,5 +140,6 @@ if __name__ == '__main__':
 
     # delayed_binding()
 
-    #manual_traversal_iterator()
-    proxy_iteration()
+    # manual_traversal_iterator()
+    # proxy_iteration()
+    create_iterator_by_using_generator()
