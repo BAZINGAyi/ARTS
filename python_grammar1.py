@@ -236,6 +236,48 @@ def implement_an_iterator_protocol():
         print(ch)
 
 
+# Question5: Reverse iteration
+def reverse_iteration():
+    # use reversed
+    a = [1, 2, 3, 4]
+    for x in reversed(a):
+        print(x)
+
+    # Reverse iteration only take effect if the size of the object is
+    # pre-determined or if the object implements __reversed__ method.
+    # If neither of them matches, you must first convert the object to a list,
+    # such as
+    # Print a file backwards
+    f = open('algorithm-1.py',  encoding='utf-8')
+    for line in reversed(list(f)):
+        print(line, end='')
+    # but convert a iterator to a list needs larges of memory
+
+    # we can do it by using __reversed()__ method on custom class
+    class Countdown:
+        def __init__(self, start):
+            self.start = start
+
+        # Forward iterator
+        def __iter__(self):
+            n = self.start
+            while n > 0:
+                yield n
+                n -= 1
+
+        # Reverse iterator
+        def __reversed__(self):
+            n = 1
+            while n <= self.start:
+                yield n
+                n += 1
+
+    for rr in reversed(Countdown(30)):
+        print(rr)
+    for rr in Countdown(30):
+        print(rr)
+
+
 if __name__ == '__main__':
     # uses_asterisk()
 
@@ -244,4 +286,5 @@ if __name__ == '__main__':
     # manual_traversal_iterator()
     # proxy_iteration()
     # create_iterator_by_using_generator()
-    implement_an_iterator_protocol()
+    # implement_an_iterator_protocol()
+    reverse_iteration()
