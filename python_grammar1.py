@@ -278,6 +278,47 @@ def reverse_iteration():
         print(rr)
 
 
+# Question6: Generator function with external state
+def generator_function_with_external_state():
+    # If you want your generator to exposer the external state to the use,
+    # don't forget that you can simply implement it as a class and then put
+    # the generator function in the __iter() method. such as:
+    from collections import deque
+    class linehistory:
+        def __init__(self, lines, histlen=3):
+            self.lines = lines
+            self.history = deque(maxlen=histlen)
+
+        def __iter__(self):
+            for lineno, line in enumerate(self.lines, 1):
+                self.history.append((lineno, line))
+                yield line
+
+        def clear(self):
+            self.history.clear()
+
+    with open('algorithm-1.py', encoding='utf-8') as f:
+        lines = linehistory(f)
+        for line in lines:
+            if 'print' in line:
+                for lineno, hline in lines.history:
+                    print('{}:{}'.format(lineno, hline), end='')
+
+    # About the generator, it is easy to fall into trap of the function
+    # omnipotent. If the generator function needs to deal with other parts of
+    # your program(such as exposing property values, allowing control via method
+    # calls, etc). it can make your code exceptions more complicated. If this
+    # is the case, consider using the way defined classes described above.
+
+    # If you want not to use the for in the traverse operation. you can use
+    # iter() function.
+    f = open('algorithm-1.py', encoding='utf-8')
+    lines = linehistory(f)
+    it = iter(lines)
+    print(next(it))
+    print(next(it))
+
+
 if __name__ == '__main__':
     # uses_asterisk()
 
@@ -287,4 +328,5 @@ if __name__ == '__main__':
     # proxy_iteration()
     # create_iterator_by_using_generator()
     # implement_an_iterator_protocol()
-    reverse_iteration()
+    # reverse_iteration()
+    generator_function_with_external_state()
