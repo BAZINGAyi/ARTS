@@ -408,6 +408,33 @@ def iterative_combination_of_iterations():
         print(c)
 
 
+# Question10: Iterative index value iteration
+def iterative_index_value_iteration():
+    # You want to track the index of th element being processed while iterating
+    # over a sequence
+    # Use the enumerate() of the enumerate()
+    my_list = ['a', 'b', 'c']
+    for idx, val in enumerate(my_list):
+        print(idx, val)
+
+    # you change the start value
+    my_list = ['a', 'b', 'c']
+    for idx, val in enumerate(my_list, 1):
+        print(idx, val)
+
+    # you can use it in traversing files
+    def parse_data(filename):
+        with open(filename, 'rt') as f:
+            for lineno, line in enumerate(f, 1):
+                fields = line.split()
+                try:
+                    count = int(fields[1])
+                except ValueError as e:
+                    print('Line {}: Parse error: {}'.format(lineno, e))
+    parse_data('.gitignore')
+
+
+
 if __name__ == '__main__':
     # uses_asterisk()
 
@@ -421,4 +448,5 @@ if __name__ == '__main__':
     # generator_function_with_external_state()
     # iterator_slice()
     # jump_the_start_of_the_iterator_object()
-    iterative_combination_of_iterations()
+    # iterative_combination_of_iterations()
+    iterative_index_value_iteration()
