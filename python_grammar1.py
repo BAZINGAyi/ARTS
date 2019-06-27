@@ -1,5 +1,3 @@
-
-
 # Question1: * 的使用
 def uses_asterisk():
     # 1. 可变长参数
@@ -21,6 +19,7 @@ def uses_asterisk():
     # ** 将字典解包，将 value 赋值给带默认值的参数
     def f(x, y, z):
         print(x, y, z)
+
     f(*[1, 2], **{'z': 3})
 
 
@@ -28,6 +27,7 @@ def uses_asterisk():
 def delayed_binding():
     def multi():
         return [lambda x: i * x for i in range(4)]
+
     print([m(3) for m in multi()])
 
 
@@ -42,6 +42,7 @@ def manual_traversal_iterator():
                     print(line, end='')
             except StopIteration:
                 pass
+
     manual_iter()
     # the next() is good method, and the StopIteration represents the end of
     # iteration.
@@ -169,6 +170,7 @@ def implement_an_iterator_protocol():
 
     for ch in root.depth_first():
         print(ch)
+
     # Outputs Node(0), Node(1), Node(3), Node(4), Node(2), Node(5)
 
     # The iterator protocol of python requires __iter()__ return a special
@@ -248,9 +250,10 @@ def reverse_iteration():
     # If neither of them matches, you must first convert the object to a list,
     # such as
     # Print a file backwards
-    f = open('algorithm-1.py',  encoding='utf-8')
+    f = open('algorithm-1.py', encoding='utf-8')
     for line in reversed(list(f)):
         print(line, end='')
+
     # but convert a iterator to a list needs larges of memory
 
     # we can do it by using __reversed()__ method on custom class
@@ -368,6 +371,43 @@ def jump_the_start_of_the_iterator_object():
         print(x)
 
 
+# Question9: Iterative combination of iterations
+def iterative_combination_of_iterations():
+    # Method1: itertools.permutations, Generate a tuple by scrambling the order
+    # of the elements in the collection
+    items = ['a', 'b', 'c']
+    from itertools import permutations
+    for p in permutations(items):
+        print(p)
+
+    # Method2: If you want to get all the permutations of the specified length,
+    # you can pass an optional length parameter.
+    for p in permutations(items, 2):
+        print(p)
+
+    # Method3: Use the itertools.combinations
+    # Get all the combinations of elements in the input collection. but the
+    # order of the elements is no longer important
+    from itertools import combinations
+    for c in combinations(items, 3):
+        print(c)
+
+    for c in combinations(items, 2):
+        print(c)
+
+    for c in combinations(items, 1):
+        print(c)
+
+    # Method4: When calculating the combination, once the element is selected,
+    # it is removed from the candidate (for example, if the element 'a' has
+    # already been selected, then it will not be considered again). The function
+    # itertools.combinations_with_replacement() allows the same element to be
+    # selected multiple times, such as:
+    from itertools import combinations_with_replacement
+    for c in combinations_with_replacement(items, 3):
+        print(c)
+
+
 if __name__ == '__main__':
     # uses_asterisk()
 
@@ -380,4 +420,5 @@ if __name__ == '__main__':
     # reverse_iteration()
     # generator_function_with_external_state()
     # iterator_slice()
-    jump_the_start_of_the_iterator_object()
+    # jump_the_start_of_the_iterator_object()
+    iterative_combination_of_iterations()
