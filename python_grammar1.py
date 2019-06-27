@@ -344,6 +344,30 @@ def iterator_slice():
     # But the islice() function will consume the data in the incoming iterator.
 
 
+# Question8: jump the start of the iterator object
+def jump_the_start_of_the_iterator_object():
+    # init file
+    with open('.gitignore') as f:
+        for line in f:
+            print(line, end='')
+    print("I'm as split---------------------")
+
+    # If you want to skip the comment line at the beginning, you can do this:
+    from itertools import dropwhile
+    with open('.gitignore') as f:
+        for line in dropwhile(lambda line: line.startswith('#'), f):
+            print(line, end='')
+
+    # if we know the number of line, we can use itertools.islice() instead of it
+    from itertools import islice
+    items = ['a', 'b', 'c', 1, 4, 10, 15]
+    for x in islice(items, 3, None):
+        print(x)
+    # get the three numbers of start
+    for x in islice(items, None, 3):
+        print(x)
+
+
 if __name__ == '__main__':
     # uses_asterisk()
 
@@ -355,4 +379,5 @@ if __name__ == '__main__':
     # implement_an_iterator_protocol()
     # reverse_iteration()
     # generator_function_with_external_state()
-    iterator_slice()
+    # iterator_slice()
+    jump_the_start_of_the_iterator_object()
