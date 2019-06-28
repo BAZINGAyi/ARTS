@@ -434,6 +434,57 @@ def iterative_index_value_iteration():
     parse_data('.gitignore')
 
 
+# Question11： Iterating multiple sequences simultaneously
+def iterating_multiple_sequences_simultaneously():
+    # you want to iterating multiple sequences simultaneously
+    # use the zip()
+    xpts = [1, 5, 4, 2, 10, 7]
+    ypts = [101, 78, 37, 15, 62, 99]
+    for x, y in zip(xpts, ypts):
+        print(x, y)
+    # Once one of the sequences ends, the iteration ends.
+    a = [1, 2, 3]
+    b = ['w', 'x', 'y', 'z']
+    for i in zip(a, b):
+        print(i)
+
+    # the zip_longest() will stop when the iterating arrive at the end of the
+    # longest list
+    from itertools import zip_longest
+    for i in zip_longest(a, b, fillvalue=0):
+        print(i)
+
+    # Use the zip to generate a dict
+    headers = ['name', 'shares', 'price']
+    values = ['ACME', 100, 490.1]
+    s = dict(zip(headers, values))
+    print(s)
+
+    for name, val in zip(headers, values):
+        print(name, '=', val)
+
+    # use the More than two sequences of parameters
+    a = [1, 2, 3]
+    b = [10, 11, 12]
+    c = ['x', 'y', 'z']
+    for i in zip(a, b, c):
+        print(i)
+
+    # The final point is that zip() will create an iterator to return as the
+    # result. If you need to store the paired values ​​in a list, use the list()
+    # function. such as:
+    zip(a, b)
+    print(list(zip(a, b)))
+
+
+# Question12: Iteration of elements on different collections
+def iteration_of_elements_on_different_collections():
+    from itertools import chain
+    a = [1, 2, 3, 4]
+    b = ['x', 'y', 'z']
+    for x in chain(a, b):
+        print(x)
+
 
 if __name__ == '__main__':
     # uses_asterisk()
@@ -449,4 +500,6 @@ if __name__ == '__main__':
     # iterator_slice()
     # jump_the_start_of_the_iterator_object()
     # iterative_combination_of_iterations()
-    iterative_index_value_iteration()
+    # iterative_index_value_iteration()
+    # iterating_multiple_sequences_simultaneously()
+    iteration_of_elements_on_different_collections()
