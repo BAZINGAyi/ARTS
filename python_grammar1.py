@@ -431,6 +431,7 @@ def iterative_index_value_iteration():
                     count = int(fields[1])
                 except ValueError as e:
                     print('Line {}: Parse error: {}'.format(lineno, e))
+
     parse_data('.gitignore')
 
 
@@ -486,6 +487,96 @@ def iteration_of_elements_on_different_collections():
         print(x)
 
 
+# Question13: Create a data processing pipeline
+def create_a_data_processing_pipeline():
+    # Study Resource: http://www.dabeaz.com/generators/
+
+    # you want to iterate the data through the data in a data pipeline(like a
+    # Unix pipeline). For example, you have a lot of data to process, but you
+    # can't put them into memory at once
+    # Use the generator
+    import os
+    import fnmatch
+    import gzip
+    import bz2
+    import re
+
+    def gen_find(filepat, top):
+        '''
+        Find all filenames in a directory tree that match a shell wildcard pattern
+        '''
+        for path, dirlist, filelist in os.walk(top):
+            for name in fnmatch.filter(filelist, filepat):
+                yield os.path.join(path, name)
+
+    def gen_opener(filenames):
+        '''
+        Open a sequence of filenames one at a time producing a file object.
+        The file is closed immediately when proceeding to the next iteration.
+        '''
+        for filename in filenames:
+            if filename.endswith('.gz'):
+                f = gzip.open(filename, 'rt')
+            elif filename.endswith('.bz2'):
+                f = bz2.open(filename, 'rt')
+            else:
+                f = open(filename, 'rt')
+            yield f
+            f.close()
+
+    def gen_concatenate(iterators):
+        '''
+        Chain a sequence of iterators together into a single sequence.
+        '''
+        for it in iterators:
+            # The statement yield from it simply returns all the values
+            # ​​produced by the generator it
+            yield from it
+
+    def gen_grep(pattern, lines):
+        '''
+        Look for a regex pattern in a sequence of lines
+        '''
+        pat = re.compile(pattern)
+        for line in lines:
+            if pat.search(line):
+                yield line
+
+    lognames = gen_find('access-log*', 'www')
+    files = gen_opener(lognames)
+    lines = gen_concatenate(files)
+    pylines = gen_grep('(?i)python', lines)
+    for line in pylines:
+        print(line)
+
+    # If you want to extend the pipeline in the future, you can even wrap the
+    # data in a generator expression. For example, the following version
+    # calculates the number of bytes transferred and calculates the sum.
+
+    lognames = gen_find('access-log*', 'www')
+    files = gen_opener(lognames)
+    lines = gen_concatenate(files)
+    pylines = gen_grep('(?i)python', lines)
+    bytecolumn = (line.rsplit(None, 1)[1] for line in pylines)
+    bytes = (int(x) for x in bytecolumn if x != '-')
+    print('Total', sum(bytes))
+
+    # Pipeline processing of data can be used to solve a variety of other
+    # problems, including parsing, reading real-time data, timing polling,
+    #  and so on.
+    # To understand the above code, the focus is on understanding the yield
+    #  statement as the producer of the data and the for loop statement as the
+    #  consumer of the data. When these generators are joined together, each
+    #  yield passes a separate data element to the next stage of the iterative
+    #  processing pipeline. In the final part of the example, the sum() function
+    #  is the final program driver, extracting an element from the generator
+    #  pipeline each time.
+    # A very nice feature of this approach is that ech generator function is
+    # small and independent. This makes it easy to write and maintain them.
+    # The above code works fine even in a very large file directory. In fact,
+    # due to the iterative approach, the code runs with very little memory.
+
+
 if __name__ == '__main__':
     # uses_asterisk()
 
@@ -502,4 +593,9 @@ if __name__ == '__main__':
     # iterative_combination_of_iterations()
     # iterative_index_value_iteration()
     # iterating_multiple_sequences_simultaneously()
-    iteration_of_elements_on_different_collections()
+    # iteration_of_elements_on_different_collections()
+    create_a_data_processing_pipeline()
+
+
+
+
