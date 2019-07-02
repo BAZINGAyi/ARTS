@@ -577,6 +577,36 @@ def create_a_data_processing_pipeline():
     # due to the iterative approach, the code runs with very little memory.
 
 
+# Question14: Expand nested sequences
+def expand_nested_sequences():
+    # you want to expand a multi-level nested sequence into a single-level list
+    from collections import Iterable
+    def flatten(items, ignore_types=(str, bytes)):
+        for x in items:
+            if isinstance(x, Iterable) and not isinstance(x, ignore_types):
+                yield from flatten(x)
+            else:
+                yield x
+
+    items = [1, 2, [3, 4, [5, 6], 7], 8]
+    # Produces 1 2 3 4 5 6 7 8
+    for x in flatten(items):
+        print(x)
+
+    items = ['Dave', 'Paula', ['Thomas', 'Lewis']]
+    for x in flatten(items):
+        print(x)
+
+    # If you don't use the yield from, need to use the for statement
+    def flatten(items, ignore_types=(str, bytes)):
+        for x in items:
+            if isinstance(x, Iterable) and not isinstance(x, ignore_types):
+                for i in flatten(x):
+                    yield i
+            else:
+                yield x
+
+
 if __name__ == '__main__':
     # uses_asterisk()
 
@@ -594,7 +624,8 @@ if __name__ == '__main__':
     # iterative_index_value_iteration()
     # iterating_multiple_sequences_simultaneously()
     # iteration_of_elements_on_different_collections()
-    create_a_data_processing_pipeline()
+    # create_a_data_processing_pipeline()
+    expand_nested_sequences()
 
 
 
