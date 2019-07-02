@@ -607,6 +607,58 @@ def expand_nested_sequences():
                 yield x
 
 
+# Question15: Traversing the merged sorting iteration object in order
+def traversing_the_merged_sorting_iteration_object_in_object():
+    import heapq
+    a = [1, 4, 7, 10]
+    b = [2, 5, 6, 11]
+    # One thing to emphasize is that merge() requires all input sequences to be
+    # sorted.
+    for c in heapq.merge(a, b):
+        print(c)
+
+    # The iterable nature of heapq.merge(0 means that it does not read all
+    # sequences immediately. This means you can use it in very long sequences
+    # without much overhead. For example, here's an example to demonstrate how
+    # to merge two sort files.
+    with open('sorted_file_1', 'rt') as file1, \
+            open('sorted_file_2', 'rt') as file2, \
+            open('merged_file', 'wt') as outf:
+
+        for line in heapq.merge(file1, file2):
+            outf.write(line)
+
+
+# Question16: Use an iterator instead of a while infinite loop
+def use_an_iterator_instead_of_a_while_infinite_loop():
+    # A common IO operation program look like this:
+    # CHUNKSIZE = 8192
+    # def reader(s):
+    #     while True:
+    #         data = s.recv(CHUNKSIZE)
+    #         if data == b'':
+    #             break
+    #         process_data(data)
+    # we can use iter() method to instead of it.
+    # def reader2(s):
+        # for chunk in iter(lambda: s.recv(CHUNKSIZE), b''):
+        #    pass
+            # process_data(data)
+    import sys
+    f = open('python_grammar1.py', encoding='utf-8')
+    for chunk in iter(lambda: f.read(10), ''):
+        n = sys.stdout.write(chunk)
+
+    # iter method can accepts a optional callable object and a end marker as a
+    # input parameters. it creates an iterator and continuously calls the
+    # callable object until the return values equal the end marker.
+    # This particular method works well for some specific functions that are
+    #  called repeatedly, such as functions involving I/O calls. For example,
+    #  if you want to read data as a block of data from a socket or file,
+    #  you usually have to repeatedly execute read() or recv(), followed by a
+    #  file end test to determine Whether to terminate.
+
+
 if __name__ == '__main__':
     # uses_asterisk()
 
@@ -625,8 +677,6 @@ if __name__ == '__main__':
     # iterating_multiple_sequences_simultaneously()
     # iteration_of_elements_on_different_collections()
     # create_a_data_processing_pipeline()
-    expand_nested_sequences()
-
-
-
-
+    # expand_nested_sequences()
+    # traversing_the_merged_sorting_iteration_object_in_object()
+    use_an_iterator_instead_of_a_while_infinite_loop()
