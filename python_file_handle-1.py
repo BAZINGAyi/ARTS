@@ -128,6 +128,7 @@ def read_text_data_with_the_correct_encoding():
 
     # the read nad write operation use system encoding by default, in the most
     # of machine uses the utf-8
+    import sys
     print(sys.getdefaultencoding())
     with open('somefile.txt', 'rt', encoding='latin-1') as f:
         pass
@@ -180,6 +181,13 @@ def read_text_data_with_the_correct_encoding():
     g.close()
 
 
+# Question3: Print to the file
+def redirect_print_to_the_file():
+    # Mode must be wt, otherwise it will be wrong
+    with open('d:/work/test.txt', 'wt') as f:
+        print('Hello World!', file=f)
+
+
 if __name__ == "__main__":
 
     # handle_file()
@@ -190,28 +198,6 @@ if __name__ == "__main__":
 
     # traverse_dir_method2()
 
-    import sys, gc
+    # redirect_print_to_the_file()
 
-
-    def make_cycle():
-        a = {}
-        a[0] = 1
-
-
-    def main():
-        collected = gc.collect()
-
-
-    print("Garbage collector: collected %d objects." % (collected))
-    print("Creating cycles...")
-    for i in range(10):
-        make_cycle()
-    collected = gc.collect()
-    print("Garbage collector: collected %d objects." % (collected))
-
-    if __name__ == "__main__":
-        ret = main()
-    sys.exit(ret)
-    import gc
-
-    print("Garbage collection thresholds: %s" % str(gc.get_threshold()))
+    redirect_print_to_the_file()
