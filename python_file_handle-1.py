@@ -96,6 +96,90 @@ def traverse_dir_method2():
     func("../ARTS", postfix)
 
 
+# Question2: read text data
+def read_text_data_with_the_correct_encoding():
+    # You need to read and write text data of various encodings,
+    # such as ASCII, UTF-8 or UTF-16 encoding.
+    # Read the entire file as a single string
+    # The 't' means text mode
+    with open('somefile.txt', 'rt') as f:
+        data = f.read()
+
+    # Iterate over the lines of the file
+    with open('somefile.txt', 'rt') as f:
+        for line in f:
+            pass
+            # process line
+    # write and clear a existed file
+    # Write chunks of text data
+    with open('somefile.txt', 'wt') as f:
+        f.write('text1')
+        f.write('text2')
+
+    # Redirected print statement
+    with open('somefile.txt', 'wt') as f:
+        print('line1', file=f)
+        print('line2', file=f)
+
+    # If you want append content to an existed file
+    with open('somefile.txt', 'at') as f:
+        f.write('text1')
+        f.write('text2')
+
+    # the read nad write operation use system encoding by default, in the most
+    # of machine uses the utf-8
+    print(sys.getdefaultencoding())
+    with open('somefile.txt', 'rt', encoding='latin-1') as f:
+        pass
+
+    # Using latin-1 encoding will never produce an encoding error when reading
+    # a unknown encoded text
+    # Reading a file with latin-1 encoding may not produce completely correct
+    # text decoding data, but it can also extract enough useful data from it.
+    # At the same time, if you later write back the data, the original data
+    # will still be retained.
+
+    # There is a problem about line break symbol, they are different in the Uinx
+    # and Windows. By default, Python recognizes all normal newline characters
+    # and converts them into a single '\n' character.
+    # Similarly, the line break '\n' is converted to the system default newline
+    # when output.
+
+    # If you don't want this way as default handling, you can pass the parameter
+    # newline='' to the open() functions
+    # like this:
+    # Read with disabled newline translation
+    with open('somefile.txt', 'rt', newline='') as f:
+        pass
+    # To prove the difference between the two, I read a windows file on a unix,
+    # the file name is `hello world\r\n`
+    # Newline translation enabled (the default)
+    f = open('hello.txt', 'rt')
+    f.read()
+    # 'hello world!\n'
+    f.close()
+
+    # Newline translation disabled
+    g = open('hello.txt', 'rt', newline='')
+    g.read()
+    # 'hello world!\r\n'
+
+    # The last problem is the coding error that can occur in the text file.
+    # If this  error occurs, It usually means that the encoding you specified
+    # when reading the text is incorrect.
+    # If the encoding error still exists, you can pass an optional errors
+    # parameter to the open() function to handle the errors.
+
+    # Replace bad chars with Unicode U+fffd replacement char
+    f = open('sample.txt', 'rt', encoding='ascii', errors='replace')
+    f.read()
+    # Ignore bad chars entirely
+    g = open('sample.txt', 'rt', encoding='ascii', errors='ignore')
+    g.read()
+    f.close()
+    g.close()
+
+
 if __name__ == "__main__":
 
     # handle_file()
@@ -104,4 +188,30 @@ if __name__ == "__main__":
 
     # traverse_dir_method1()
 
-    traverse_dir_method2()
+    # traverse_dir_method2()
+
+    import sys, gc
+
+
+    def make_cycle():
+        a = {}
+        a[0] = 1
+
+
+    def main():
+        collected = gc.collect()
+
+
+    print("Garbage collector: collected %d objects." % (collected))
+    print("Creating cycles...")
+    for i in range(10):
+        make_cycle()
+    collected = gc.collect()
+    print("Garbage collector: collected %d objects." % (collected))
+
+    if __name__ == "__main__":
+        ret = main()
+    sys.exit(ret)
+    import gc
+
+    print("Garbage collection thresholds: %s" % str(gc.get_threshold()))
