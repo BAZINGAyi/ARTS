@@ -207,6 +207,64 @@ def print_with_other_separators():
     print(','.join(str(x) for x in row))
 
 
+# Question5: read bytes data(like picture, audio and so on)
+def read_bytes_data():
+    # Read the entire file as a single byte string
+    with open('somefile.bin', 'rb') as f:
+        data = f.read()
+
+    # Write binary data to a file
+    with open('somefile.bin', 'wb') as f:
+        f.write(b'Hello World')
+
+    # when we read or write bytes data, we need to indicates that the data is
+    # in a byte string format.
+
+    # the return value are bytes value not bytes string when we use the Index
+    # and Iterative action
+    # Text string
+    t = 'Hello World'
+    print(t[0])
+    for c in t:
+        print(c)
+
+    # Byte string
+    b = b'Hello World'
+    b[0]  # 72
+
+    # If you want to read or write text data from a binary mode file, you must
+    # ensure that you want to decode and encode it.
+    with open('somefile.bin', 'rb') as f:
+        data = f.read(16)
+        text = data.decode('utf-8')
+
+    with open('somefile.bin', 'wb') as f:
+        text = 'Hello World'
+        f.write(text.encode('utf-8'))
+
+    # binary Io have a little-known feature that arrays and C structure types
+    # can be written directly
+    import array
+    nums = array.array('i', [1, 2, 3, 4])
+    with open('data.bin', 'wb') as f:
+        f.write(nums)
+
+    # This applies to any implementation of what is called a "buffer interface"
+    # that expose its underlying memory buffer to handle its operations.
+    # Writing binary data is one such operations.
+
+    # Many object admit to use the readinto() method of file object to read
+    # directly binary datas to underlying memory buffer
+    import array
+    a = array.array('i', [0, 0, 0, 0, 0, 0, 0, 0])
+    with open('data.bin', 'rb') as f:
+        f.readinto(a)
+
+    # Care must be taken when using this method, because it typically has
+    # platform dependencies and may depend on word length and byte order
+    # (high order first and low order first).
+
+
 if __name__ == "__main__":
 
     # handle_file()
@@ -221,4 +279,6 @@ if __name__ == "__main__":
 
     # redirect_print_to_the_file()
 
-    print_with_other_separators()
+    # print_with_other_separators()
+
+    read_bytes_data()
