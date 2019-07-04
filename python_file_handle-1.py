@@ -188,6 +188,25 @@ def redirect_print_to_the_file():
         print('Hello World!', file=f)
 
 
+# Question4: Print with other separators or line terminators
+def print_with_other_separators():
+    print('ACME', 50, 91.5)
+    print('ACME', 50, 91.5, sep=',')
+    print('ACME', 50, 91.5, sep=',', end='!!\n')
+    # use end to forbid wrap
+    for i in range(5):
+        print(i)
+
+    for i in range(5):
+        print(i, end=' ')
+
+    # join only can be used the string
+    print(','.join(('ACME', '50', '91.5')))
+    row = ('ACME', 50, 91.5)
+    # print(','.join(row)) have a error
+    print(','.join(str(x) for x in row))
+
+
 if __name__ == "__main__":
 
     # handle_file()
@@ -200,4 +219,6 @@ if __name__ == "__main__":
 
     # redirect_print_to_the_file()
 
-    redirect_print_to_the_file()
+    # redirect_print_to_the_file()
+
+    print_with_other_separators()
