@@ -40,7 +40,34 @@ def handle_string():
     print("astr"[::-1])
 
 
-# Question4: 列表操作
+# Question4: 列表
+def understanding_list():
+    l = [1, 2, 3]
+    l.__sizeof__()  # 64
+
+    tup = (1, 2, 3)
+    tup.__sizeof__()  # 48
+
+    # 事实上，由于列表是动态的，所以它需要存储指针，来指向对应的的元素（上述例子中，对于 int 型
+    # ，8 字节）。另外，由于列表可变，所以需要额外存储已经分配的长度
+    # 大小（8 字节），这样才可以实实时追踪列表空间的使用情况，当空间不足时，及时分配额外空间。
+    l = []
+    l.__sizeof__() # 空列表的存储空间为 40 字节
+    l.append(1)
+    l.__sizeof__()
+    # 72  加入了元素 1 之后，列表为其分配了可以存储 4个元素的空间(72 - 40) / 8 = 4
+    l.append(2)
+    l.__sizeof__()  # 72 // 由于之前分配了空间，所以加入元素 2，列表空间不变
+    l.append(3)
+    l.__sizeof__()  # 72 // 同上
+    l.append(4)
+    l.__sizeof__()  # 72 // 同上
+    l.append(5)
+    l.__sizeof__()
+    # 104 // 加入元素5 之后，列表的空间不足，所以又额外分配了可以存储 4 个元素的空间
+    # Python 的每次分配空间都会额外分配一些，增加/删除的操作均为 O（1）
+
+
 def handle_list():
     # 获取超出长度的列表的切片，不会报错，会返回 []
     list_cut = ['a', 'b', 'c', 'd', 'e']
@@ -195,10 +222,10 @@ if __name__ == '__main__':
 
     # handle_string()
 
+    understanding_list()
     # handle_list()
     # delete_list()
-
     # list_math_calculate()
-    list_comprehension()
+    # list_comprehension()
 
     # get_missing_letter()
