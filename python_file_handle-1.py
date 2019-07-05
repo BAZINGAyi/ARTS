@@ -1,4 +1,6 @@
+import io
 from mmap import mmap
+
 
 # Question1: 现在要处理一个大小为10G的文件，但是内存只有4G，
 # 应该如何实现？需要考虑的问题都有那些？
@@ -47,6 +49,7 @@ def get_lines(fp):
 def handle_file():
     for line in get_lines("leetcode-7.py"):
         print(line.rstrip())
+
 
 # Question2: 遍历文件夹
 
@@ -284,8 +287,35 @@ def files_does_not_exists_to_be_written():
     # Notice: x mode is extend for python3. it not exists in Before version
 
 
-if __name__ == "__main__":
+# Question7: the IO operation of String
+def the_io_operation_of_string():
+    # you want to manipulate text or binary strings using a program that
+    # manipulates class file objects
+    # use io.stringIO() and io.Bytes()
+    s = io.StringIO()
+    s.write('Hello World\n')
+    print('This is a test', file=s)
+    # Get all of the data written so far
+    s.getvalue()
 
+    # Wrap a file interface around an existing string
+    s = io.StringIO('Hello\nWorld\n')
+    s.read(4)
+    s.read()
+
+    # io.StringIO can only be used for text. If you want to manipulate binary
+    # data, use the io.BytesIO class instead
+    s = io.BytesIO()
+    s.write(b'binary data')
+    s.getvalue()
+
+    # The StringIO or BytesIO is very useful when you want to mock a general
+    # file. For example, In uint tesing, you can use StrinIO to crearte a class
+    # file object that including test data, this object can be pass to a
+    # function that have a parameter is general file
+
+
+if __name__ == "__main__":
     # handle_file()
 
     # print_directory_contents('../ARTS')
@@ -300,4 +330,6 @@ if __name__ == "__main__":
 
     # print_with_other_separators()
 
-    read_bytes_data()
+    # read_bytes_data()
+
+    the_io_operation_of_string()
