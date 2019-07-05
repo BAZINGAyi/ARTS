@@ -265,6 +265,25 @@ def read_bytes_data():
     # (high order first and low order first).
 
 
+# Question6: Files does not exist to be written
+def files_does_not_exists_to_be_written():
+    # you want to write data in a file, but the premise must be that the files
+    # does not exist on the file system.
+    # Use x mode instead of w mode
+    with open('somefile', 'xt') as f:
+        f.write('Hello\n')
+
+    # Sometimes we cant use it just like this:
+    import os
+    if not os.path.exists('somefile'):
+        with open('somefile', 'wt') as f:
+            f.write('Hello\n')
+    else:
+        print('File already exists!')
+
+    # Notice: x mode is extend for python3. it not exists in Before version
+
+
 if __name__ == "__main__":
 
     # handle_file()
