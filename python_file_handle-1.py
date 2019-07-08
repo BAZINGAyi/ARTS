@@ -352,6 +352,34 @@ def read_or_write_a_compressed_files():
     # such as sockets, pipes, and in-memory files.
 
 
+# Question9: File iteration for fixed-size records
+def file_iteration_for_fixed_size_records():
+    # You want to iterate over a collection of fixed-length records or blocks
+    # of data, not row by row in a file.
+    from functools import partial
+
+    RECORD_SIZE = 32
+
+    with open('somefile.data', 'rb') as f:
+        records = iter(partial(f.read, RECORD_SIZE), b'')
+        for r in records:
+            pass
+
+    # The records object in this example is an iterable object, which will
+    #  continuously produce data blocks of fixed size until the end of the file.
+    # Note that if the total record size is not an integer multiple of the
+    #  block size, the last returned element will have fewer bytes than expected
+
+    # A little-known feature of the iter() function is that if you pass it a
+    # callable object and a tag value, it creates an iterator.
+    # The iterator calls the incoming callable object until it returns the
+    # marked value, at which point the iteration terminates.
+
+    # In the example, functools.partial is used to create a callable object that
+    #  reads a fixed number of bytes from the file each time it is invoked.
+    # The tag value b '' is the return value when the end of the file is reached
+
+
 if __name__ == "__main__":
     # handle_file()
 
