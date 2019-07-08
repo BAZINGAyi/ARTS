@@ -315,6 +315,43 @@ def the_io_operation_of_string():
     # function that have a parameter is general file
 
 
+# Question8: reading and writing a compressing files
+def read_or_write_a_compressed_files():
+    # Use gzip or bz2
+    # gzip compression
+    import gzip
+    with gzip.open('somefile.gz', 'rt') as f:
+        text = f.read()
+
+    # bz2 compression
+    import bz2
+    with bz2.open('somefile.bz2', 'rt') as f:
+        text = f.read()
+
+    # the mode also can choose rb or wb
+    # If you don't specify the mode, the default is binary mode. and If the
+    # program wants to accept text data, it will fail.
+
+    # it can use the compresslevel to specify a compress level when we write
+    # a compressed data. the default level is 9 that is the highest level.
+    # The lower the level, the better the performance, but the
+    # less compressed the data.
+    with gzip.open('somefile.gz', 'wt', compresslevel=5) as f:
+        f.write(text)
+
+    # Finally, gzip.open() and bz2.open() have a little-understood feature that
+    # works on an existing file that opens in binary mode.
+    # For example, the following code works:
+
+    import gzip
+    f = open('somefile.gz', 'rb')
+    with gzip.open(f, 'rt') as g:
+        text = g.read()
+
+    # This allows gzip and bz2 modules to work on many file-like objects,
+    # such as sockets, pipes, and in-memory files.
+
+
 if __name__ == "__main__":
     # handle_file()
 
