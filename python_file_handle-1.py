@@ -431,6 +431,39 @@ def read_bytes_data_to_variable_buffer():
     # 这些操作可被用来填充或修改数组和缓冲区内容。
 
 
+# Question11: Memory mapped binary
+def memory_mapped_binary():
+    # You want to memory map a binary file into a variable byte array, perhaps
+    # for random access to its contents or to make some modifications in place.
+    # Use mmap to mapping a file.
+    import os
+    import mmap
+
+    def memory_map(filename, access=mmap.ACCESS_WRITE):
+        size = os.path.getsize(filename)
+        fd = os.open(filename, os.O_RDWR)
+        return mmap.mmap(fd, size, access=access)
+
+    size = 1000000
+    with open('data', 'wb') as f:
+        f.seek(size - 1)
+        f.write(b'\x00')
+
+    # This is a example for using mmap to files
+    m = memory_map('data')
+    print(len(m))
+    print(m[0:10])
+    print(m[0])
+
+    # Reassign a slice
+    m[0:11] = b'Hello World'
+    m.close()
+
+    # Verify that changes were made
+    with open('data', 'rb') as f:
+        print(f.read(11))
+
+
 if __name__ == "__main__":
     # handle_file()
 
@@ -450,4 +483,6 @@ if __name__ == "__main__":
 
     # the_io_operation_of_string()
 
-    read_bytes_data_to_variable_buffer()
+    # read_bytes_data_to_variable_buffer()
+
+    memory_mapped_binary()
