@@ -464,6 +464,28 @@ def memory_mapped_binary():
         print(f.read(11))
 
 
+# Question12: the operation of file path
+def the_operation_of_path():
+    # use os.path to handle path
+    import os
+    path = '/Users/beazley/Data/data.csv'
+    # Get the last component of the path
+    os.path.basename(path)  # 'data.csv'
+
+    # Get the directory name
+    os.path.dirname(path)  # '/Users/beazley/Data'
+
+    # Join path components together
+    os.path.join('tmp', 'data', os.path.basename(path))  # 'tmp/data/data.csv'
+
+    # Expand the user's home directory
+    path = '~/Data/data.csv'
+    os.path.expanduser(path)  # '/Users/beazley/Data/data.csv'
+
+    # Split the file extension
+    os.path.splitext(path)
+
+
 if __name__ == "__main__":
     # handle_file()
 
