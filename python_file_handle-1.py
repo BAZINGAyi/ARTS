@@ -486,6 +486,33 @@ def the_operation_of_path():
     os.path.splitext(path)
 
 
+# Question13: test if the file exists
+def test_if_the_file_exists():
+    import os
+    os.path.exists('/etc/passwd')
+    os.path.exists('/tmp/spam')
+    # Is a regular file
+    os.path.isfile('/etc/passwd')
+    # Is a directory
+    os.path.isdir('/etc/passwd')
+    # Is a symbolic link
+    os.path.islink('/usr/local/bin/python3')
+    # Get the file linked to
+    os.path.realpath('/usr/local/bin/python3')
+
+    # Get the size or modified date of file:
+    os.path.getsize('/etc/passwd')
+    os.path.getmtime('/etc/passwd')
+    import time
+    time.ctime(os.path.getmtime('/etc/passwd'))
+
+    # Think about the files problem of permission
+    os.path.getsize('/Users/guido/Desktop/foo.txt')
+
+
+
+
+
 if __name__ == "__main__":
     # handle_file()
 
