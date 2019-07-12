@@ -1,4 +1,5 @@
 import io
+import sys
 from mmap import mmap
 
 
@@ -539,7 +540,6 @@ def get_the_file_list_in_dic():
                if fnmatch(name, '*.py')]
 
     # use os.stat() to get more info with files
-    import os
     import os.path
     import glob
 
@@ -558,6 +558,33 @@ def get_the_file_list_in_dic():
 
     # Sometimes we will meet some error that
     # File name that cannot be properly decoded
+
+
+# Question15: Ignore file name encoding
+def ignore_file_name_encoding():
+    # You want to perform the I/O operation on the file using the original file
+    # name, which means that the file name has not been decoded or encoded by
+    # the system default encoding.
+    # By default, all the file name according to the sys.getfilesystemencoding()
+    # returns the texts of the code to encode or decode.
+    print(sys.getfilesystemencoding())  # utf-8
+
+    # If for some reason you want to ignore this encoding, you can use an
+    # original byte string to specify a file name.
+    # Wrte a file using a unicode filename
+    with open('jalape\xf1o.txt', 'w') as f:
+        f.write('Spicy!')
+
+    # Directory listing (decoded)
+    import os
+    os.listdir('.')
+
+    # Directory listing (raw)
+    os.listdir(b'.')  # Note: byte string
+
+    # Open file with raw filename
+    with open(b'jalapen\xcc\x83o.txt') as f:
+        print(f.read())
 
 
 if __name__ == "__main__":
