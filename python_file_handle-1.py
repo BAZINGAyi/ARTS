@@ -510,7 +510,54 @@ def test_if_the_file_exists():
     os.path.getsize('/Users/guido/Desktop/foo.txt')
 
 
+# Question14: get the file list in dic
+def get_the_file_list_in_dic():
+    import os
+    names = os.listdir('somedir')
+    # the result will return the all files, sub dictionary and symbol link file.
+    # you can use the function of os.path to filter some dat
+    import os.path
 
+    # Get all regular files
+    names = [name for name in os.listdir('somedir')
+             if os.path.isfile(os.path.join('somedir', name))]
+
+    # Get all dirs
+    dirnames = [name for name in os.listdir('somedir')
+                if os.path.isdir(os.path.join('somedir', name))]
+
+    # use the startwith() or endswith() to filter a dir
+    pyfiles = [name for name in os.listdir('somedir')
+               if name.endswith('.py')]
+
+    # To match a file name that could be used glob or fnmatch
+    import glob
+    pyfiles = glob.glob('somedir/*.py')
+
+    from fnmatch import fnmatch
+    pyfiles = [name for name in os.listdir('somedir')
+               if fnmatch(name, '*.py')]
+
+    # use os.stat() to get more info with files
+    import os
+    import os.path
+    import glob
+
+    pyfiles = glob.glob('*.py')
+
+    # Get file sizes and modification dates
+    name_sz_date = [(name, os.path.getsize(name), os.path.getmtime(name))
+                    for name in pyfiles]
+    for name, size, mtime in name_sz_date:
+        print(name, size, mtime)
+
+    # Alternative: Get file metadata
+    file_metadata = [(name, os.stat(name)) for name in pyfiles]
+    for name, meta in file_metadata:
+        print(name, meta.st_size, meta.st_mtime)
+
+    # Sometimes we will meet some error that
+    # File name that cannot be properly decoded
 
 
 if __name__ == "__main__":
