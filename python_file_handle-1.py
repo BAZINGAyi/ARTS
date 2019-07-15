@@ -587,6 +587,66 @@ def ignore_file_name_encoding():
         print(f.read())
 
 
+# Question 16: Print illegal file name
+def print_illegal_file_name():
+    # 默认情况下，python 会认为所有的文件名都根据 sys.getfilesystemencoding() 编码过了。
+    # 但有一些文件系统并没有强制这样做，在创建文件名时没有正确编码文件。
+    def bad_filename(filename):
+        return repr(filename)[1:-1]
+
+    import os
+    files = os.listdir('.')
+    files  # ['spam.py', 'b\udce4d.txt', 'foo.txt']
+    # 在将错误的文件名给 open() 这样的函数时，一切能正常工作。只有在输出文件名到屏幕或者日志
+    # 程序才会崩溃
+
+    for name in files:
+        print(name)
+    # Traceback (most recent call last):
+    #     File "<stdin>", line 2, in <module>
+    # UnicodeEncodeError: 'utf-8' codec can't encode character '\udce4' in
+    # position 1: surrogates not allowed
+
+    # Method1
+    for name in files:
+        try:
+            print(name)
+        except UnicodeEncodeError:
+            print(bad_filename(name))
+
+    # Method2:
+    def bad_filename(filename):
+        temp = filename.encode(sys.getfilesystemencoding(),
+                               errors='surrogateescape')
+        return temp.decode('latin-1')
+
+    # surrogateescape:
+    # 这种是Python在绝大部分面向OS的API中所使用的错误处理器，
+    # 它能以一种优雅的方式处理由操作系统提供的数据的编码问题。
+    # 在解码出错时会将出错字节存储到一个很少被使用到的Unicode编码范围内。
+    # 在编码时将那些隐藏值又还原回原先解码失败的字节序列。
+    # 它不仅对于OS API非常有用，也能很容易的处理其他情况下的编码错误。
+
+
+# Question17: Add or change the encoding of an open file
+def add_or_change_the_encoding_of_an_open_file():
+    # You want to add or change its Unicode encoding without closing an open file
+    # Use the io.TextIOWrapper() to warp it for Binary mode
+    import urllib.request
+    import io
+
+    u = urllib.request.urlopen('http://www.python.org')
+    f = io.TextIOWrapper(u, encoding='utf-8')
+    text = f.read()
+
+    # use detach() to remove existing text layer encoding and replace it with
+    # the new encoding for text mode
+    import sys
+    print(sys.stdout.encoding)
+    sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding='latin-1')
+
+
+
 if __name__ == "__main__":
     # handle_file()
 
@@ -608,4 +668,12 @@ if __name__ == "__main__":
 
     # read_bytes_data_to_variable_buffer()
 
-    memory_mapped_binary()
+    # memory_mapped_binary()
+
+    # the_operation_of_path()
+
+    # test_if_the_file_exists()
+
+    # get_the_file_list_in_dic()
+
+    ignore_file_name_encoding()
