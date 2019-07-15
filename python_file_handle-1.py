@@ -630,8 +630,8 @@ def print_illegal_file_name():
 
 # Question17: Add or change the encoding of an open file
 def add_or_change_the_encoding_of_an_open_file():
-    # You want to add or change its Unicode encoding without closing an open file
-    # Use the io.TextIOWrapper() to warp it for Binary mode
+    # You want to add or change its Unicode encoding without closing an open
+    # file. Use the io.TextIOWrapper() to warp it for Binary mode
     import urllib.request
     import io
 
@@ -645,6 +645,46 @@ def add_or_change_the_encoding_of_an_open_file():
     print(sys.stdout.encoding)
     sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding='latin-1')
 
+    # The I/O system is built from a series of levels.
+    f = open('sample.txt', 'w')
+    print(f)  # <_io.TextIOWrapper name='sample.txt' mode='w' encoding='UTF-8'>
+    print(f.buffer)  # <_io.BufferedWriter name='sample.txt'>
+    print(f.buffer.raw)  # <_io.FileIO name='sample.txt' mode='wb'>
+    # io.TextIOWrapper 是一个编码和解码Unicode的文本处理层
+    # io.BufferedWriter 是一个处理二进制数据的带缓冲的I/O层
+    # io.FileIO 是一个表示操作系统底层文件描述符的原始文件。
+    # 增加或改变文本编码会涉及增加或改变最上面的 io.TextIOWrapper 层
+
+    # 一般来讲，像上面例子这样通过访问属性值来直接操作不同的层是很不安全的。
+    #  例如，如果你试着使用下面这样的技术改变编码看看会发生什么：
+    print(f)  # <_io.TextIOWrapper name='sample.txt' mode='w' encoding='UTF-8'>
+    f = io.TextIOWrapper(f.buffer, encoding='latin-1')
+    print(f)  # <_io.TextIOWrapper name='sample.txt' encoding='latin-1'>
+    # 可以看到最顶层的 TextIOWrapper 已经改变了
+    f.write('Hello')
+    # Traceback (most recent call last):
+    #     File "<stdin>", line 1, in <module>
+    # ValueError: I/O operation on closed file
+    # 结果出错了，因为f的原始值已经被破坏了并关闭了底层的文件。
+    f = open('sample.txt', 'w')
+    print(f)  # <_io.TextIOWrapper name='sample.txt' mode='w' encoding='UTF-8'>
+    b = f.detach()
+    print(b)  # <_io.BufferedWriter name='sample.txt'>
+    f.write('hello')
+    # 原因和之前一样，TextIOWrapper 被破坏了
+    # Traceback (most recent call last):
+    #     File "<stdin>", line 1, in <module>
+    # ValueError: underlying buffer has been detached
+    # 添加一个新的顶层
+    f = io.TextIOWrapper(b, encoding='latin-1')
+    print(f)  # <_io.TextIOWrapper name='sample.txt' encoding='latin-1'>
+
+    # 尽管已经向你演示了改变编码的方法， 但是你还可以利用这种技术来改变文件行处理、错误机制
+    # 以及文件处理的其他方面。例如：
+    sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding='ascii',
+                                  errors='xmlcharrefreplace')
+    print(print('Jalape\u00f1o'))  # Jalape&#241;o
+    # 注意下最后输出中的非ASCII字符 ñ 是如何被 &#241; 取代的。
 
 
 if __name__ == "__main__":
