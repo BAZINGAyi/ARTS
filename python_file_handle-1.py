@@ -687,6 +687,24 @@ def add_or_change_the_encoding_of_an_open_file():
     # 注意下最后输出中的非ASCII字符 ñ 是如何被 &#241; 取代的。
 
 
+# Question18: write data to text file
+def write_data_to_text_file():
+    # 你想在文本模式打开的文件中写入原始的字节数据。
+    # 將字节数据写入文件的缓冲区
+    import sys
+    # 默认情况下，sys.stdout 总是以文本模式打开的。
+    sys.stdout.write(b'Hello\n')
+    # Traceback (most recent call last):
+    #     File "<stdin>", line 1, in <module>
+    # TypeError: must be str, not bytes
+    sys.stdout.buffer.write(b'Hello\n')
+    # 还可以通过 buffer 属性来读取二进制数据
+
+    # I/O系统以层级结构的形式构建而成。 文本文件是通过在一个拥有缓冲的二进制模式文件上增加
+    # 一个Unicode编码/解码层来创建。 buffer 属性指向对应的底层文件。如果你直接访问它的话
+    # 就会绕过文本编码/解码层。
+
+
 if __name__ == "__main__":
     # handle_file()
 
