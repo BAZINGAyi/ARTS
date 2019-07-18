@@ -113,7 +113,6 @@ class StudyDict(object):
         # [9371539127, 'gender', 'male']
         # ]
 
-
     @staticmethod
     def sorted_dict():
         d = {'a': 24, 'g': 52, 'i': 12, 'k': 33}
@@ -151,12 +150,69 @@ class StudyDict(object):
 
 
 # Question3: 字符串操作
-def handle_string():
-    # 反转字符串
-    print("astr"[::-1])
+class StudyString():
+    @staticmethod
+    def handle_string():
+        # 反转字符串
+        print("astr"[::-1])
+
+    @staticmethod
+    def understanding_string():
+        s = 'a\nb\tc'
+        # print(s)
+        # a
+        # b    c
+        print(len(s))
+
+        # 索引，切片和遍历
+        name = 'jason'
+        name[0]  # 'j'
+        name[1:3]  # 'as'
+        for char in name:
+            print(char)
+
+        # string is immutable
+        s = 'hello'
+        s[0] = 'H'
+        # s[0] = 'H'
+        # TypeError: 'str' object does not support item assignment
+
+        # change string
+        s = 'H' + s[1:]
+        s = s.replace('h', 'H')
+
+        # change string more efficiency O(n)
+        s = ''
+        for n in range(0, 100000):
+            s += str(n)
+
+        # change string more efficiency O(n)
+        l = []
+        for n in range(0, 100000):
+            l.append(str(n))
+        l = ' '.join(l)
+
+        # split
+        def query_data(namespace, table):
+            """
+            given namespace and table, query database to get corresponding
+            data
+            """
+
+            path = 'hive://ads/training_table'
+            namespace = path.split('//')[1].split('/')[0]  # 返回'ads'
+            table = path.split('//')[1].split('/')[1]  # 返回 'training_table'
+            data = query_data(namespace, table)
+
+        # 格式化 new 推荐
+        print('no data available for person with id: {}, name: {}'.format(id,
+                                                                          name))
+        # 格式化 old
+        print('no data available for person with id: %s, name: %s' % (id, name))
+
+    # Question4: 列表
 
 
-# Question4: 列表
 class StudyList(object):
     def __init__(self):
         pass
@@ -341,12 +397,14 @@ def get_missing_letter():
 
 
 if __name__ == '__main__':
-    studyDict = StudyDict()
+    # studyDict = StudyDict()
     # studyDict.sorted_dict()
     # studyDict.handle_dict()
-    studyDict.understanding_dict()
+    # studyDict.understanding_dict()
 
-    # handle_string()
+    studyString = StudyString()
+    studyString.handle_string()
+    studyString.understanding_string()
 
     # studyList = StudyList()
     # studyList.understanding_list()
@@ -358,6 +416,3 @@ if __name__ == '__main__':
     # get_missing_letter()
 
     # test_dict = {'a':1, 'b':2}
-
-
-
