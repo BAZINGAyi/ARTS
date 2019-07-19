@@ -858,6 +858,32 @@ def create_temp_file_or_files():
     # 以及在文件创建过程中采取措施避免竞态条件。 要注意的是不同的平台可能会不一样。
 
 
+# Question21: Data communication with the serial port
+def data_communication_with_the_serial_port():
+    # use pySerial
+    import serial
+    ser = serial.Serial('/dev/tty.usbmodem641',  # Device name varies
+                        baudrate=9600,
+                        bytesize=8,
+                        parity='N',
+                        stopbits=1)
+
+    # 设备名对于不同的设备和操作系统是不一样的。 比如，在Windows系统上，你可以使用0, 1等
+    # 表示的一个设备来打开通信端口”COM0”和”COM1”。 一旦端口打开，那就可以使用 read()，
+    # readline() 和 write() 函数读写数据了。例如：
+    ser.write(b'G1 X50 Y50\r\n')
+    resp = ser.readline()
+
+    # 尽管表面上看起来很简单，其实串口通信有时候也是挺麻烦的。 推荐你使用第三方包如
+    # pySerial 的一个原因是它提供了对高级特性的支持 (比如超时，控制流，缓冲区刷新，
+    # 握手协议等等)。举个例子，如果你想启用 RTS-CTS 握手协议， 你只需要给 Serial()
+    # 传递一个 rtscts=True 的参数即可。 其官方文档非常完善，因此我在这里极力推荐这个包。
+
+    # 时刻记住所有涉及到串口的I/O都是二进制模式的。因此，确保你的代码使用的是字节而不是文本
+    # (或有时候执行文本的编码/解码操作)。 另外当你需要创建二进制编码的指令或数据包的时候，
+    # struct 模块也是非常有用的。
+
+
 if __name__ == "__main__":
     # handle_file()
 
@@ -891,4 +917,6 @@ if __name__ == "__main__":
 
     # wrap_file_description_into_file_objects()
 
-    create_temp_file_or_files()
+    # create_temp_file_or_files()
+
+    data_communication_with_the_serial_port()
