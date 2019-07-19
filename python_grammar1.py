@@ -659,6 +659,31 @@ def use_an_iterator_instead_of_a_while_infinite_loop():
     #  file end test to determine Whether to terminate.
 
 
+def condition_and_cycle():
+    attributes = ['name', 'dob', 'gender']
+    values = [['jason', '2000-01-01', 'male'],
+              ['mike', '1999-01-01', 'male'],
+              ['nancy', '2001-02-01', 'female']
+              ]
+
+    # expected outout:
+    [{'name': 'jason', 'dob': '2000-01-01', 'gender': 'male'},
+     {'name': 'mike', 'dob': '1999-01-01', 'gender': 'male'},
+     {'name': 'nancy', 'dob': '2001-02-01', 'gender': 'female'}]
+
+    result = [{attributes[0]: value[0], attributes[1]: value[1], attributes[2]: value[2]} for value in values]
+
+    print(result)
+
+    result = [dict(zip(attributes, v)) for v in values]
+
+    print(result)
+
+    result = [{attributes[index]: value[index] for index in range(0,  len(attributes))} for value in values]
+
+    print(result)
+
+
 if __name__ == '__main__':
     # uses_asterisk()
 
@@ -679,4 +704,5 @@ if __name__ == '__main__':
     # create_a_data_processing_pipeline()
     # expand_nested_sequences()
     # traversing_the_merged_sorting_iteration_object_in_object()
-    use_an_iterator_instead_of_a_while_infinite_loop()
+    # use_an_iterator_instead_of_a_while_infinite_loop()
+    condition_and_cycle()
