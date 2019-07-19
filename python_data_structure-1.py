@@ -385,6 +385,96 @@ def counts_the_number_of_occurrences_of_characters_in_string():
         map(lambda x: x[0] + str(x[1]), dict_str)))
 
 
+def counts_the_word_frequency():
+    import re
+    def parse(text):
+        # 使用正则表达式去除标点符号和换行符
+        text = re.sub(r'[^\w ]', ' ', text)
+
+        # 转为小写
+        text = text.lower()
+
+        # 生成所有单词的列表
+        word_list = text.split(' ')
+
+        # 去除空白单词
+        word_list = filter(None, word_list)
+
+        # 生成单词和词频的字典
+        word_cnt = {}
+        for word in word_list:
+            if word not in word_cnt:
+                word_cnt[word] = 0
+            word_cnt[word] += 1
+
+        # 按照词频排序
+        sorted_word_cnt = sorted(word_cnt.items(), key=lambda kv: kv[1],
+                                 reverse=True)
+        return sorted_word_cnt
+
+    # in.txt like this:
+    """
+    I have a dream that my four little children will one day live in a nation where they will not be judged by the color of their skin but by the content of their character. I have a dream today.
+
+    I have a dream that one day down in Alabama, with its vicious racists, . . . one day right there in Alabama little black boys and black girls will be able to join hands with little white boys and white girls as sisters and brothers. I have a dream today.
+
+    I have a dream that one day every valley shall be exalted, every hill and mountain shall be made low, the rough places will be made plain, and the crooked places will be made straight, and the glory of the Lord shall be revealed, and all flesh shall see it together.
+
+    This is our hope. . . With this faith we will be able to hew out of the mountain of despair a stone of hope. With this faith we will be able to transform the jangling discords of our nation into a beautiful symphony of brotherhood. With this faith we will be able to work together, to pray together, to struggle together, to go to jail together, to stand up for freedom together, knowing that we will be free one day. . . .
+
+    And when this happens, and when we allow freedom ring, when we let it ring from every village and every hamlet, from every state and every city, we will be able to speed up that day when all of God's children, black men and white men, Jews and Gentiles, Protestants and Catholics, will be able to join hands and sing in the words of the old Negro spiritual: "Free at last! Free at last! Thank God Almighty, we are free at last!"
+    """
+
+    with open('in.txt', 'r') as fin:
+        text = fin.read()
+
+    word_and_freq = parse(text)
+
+    with open('out.txt', 'w') as fout:
+        for word, freq in word_and_freq:
+            fout.write('{} {}\n'.format(word, freq))
+
+
+def counts_the_word_frequency_optimize():
+    # 第一问：你能否把 NLP 例子中的 word count 实现一遍？不过这次，in.txt 可能非常非常大
+    # （意味着你不能一次读取到内存中），而 output.txt 不会很大（意味着重复的单词数量很多）
+
+    # 提示：你可能需要每次读取一定长度的字符串，进行处理，然后再读取下一次的。但是如果单纯
+    # 按照长度划分，你可能会把一个单词隔断开，所以需要细心处理这种边界情况。
+
+    import re
+    CHUNK_SIZE = 100
+    # 这个数表示一次最多读取的字符长度
+    #  这个函数每次会接收上一次得到的 last_word，然后和这次的 text 合并起来处理。
+    #  合并后判断最后一个词有没有可能连续，并分离出来，然后返回。
+    #  这里的代码没有 if 语句，但是仍然是正确的，可以想一想为什么。
+
+    def parse_to_word_list(text, last_word, word_list):
+        text = re.sub(r'[^\w ]', ' ', last_word + text)
+        text = text.lower()
+        cur_word_list = text.split(' ')
+        cur_word_list, last_word = cur_word_list[:-1], cur_word_list[-1]
+        word_list += filter(None, cur_word_list)
+        return last_word
+
+    def solve():
+        with open('in.txt', 'r') as fin:
+            word_list, last_word = [], ''
+            while True:
+                text = fin.read(CHUNK_SIZE)
+                if not text:
+                    break  # 读取完毕，中断循环
+                last_word = parse_to_word_list(text, last_word, word_list)
+                word_cnt = {}
+                for word in word_list:
+                    if word not in word_cnt:
+                        word_cnt[word] = 0
+                    word_cnt[word] += 1
+                sorted_word_cnt = sorted(word_cnt.items(), key=lambda kv: kv[1], reverse=True)
+                return sorted_word_cnt
+    print(solve())
+
+
 # Question13: 你有一个字典列表，你想根据某个或某几个字典字段来排序这个列表。
 # Answer: 使用 operator 模块中的 itemgetter 函数
 def sorted_list_items():
