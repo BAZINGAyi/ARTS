@@ -118,3 +118,102 @@ def read_and_write_csv_data():
             print(row)
 
 
+# Question2: read and write json data
+def read_and_write_json_data():
+    # To json
+    import json
+
+    data = {
+        'name': 'ACME',
+        'shares': 100,
+        'price': 542.23
+    }
+
+    json_str = json.dumps(data)
+
+    # To string
+    data = json.loads(json_str)
+
+    # handle with file
+    # Writing JSON data
+    with open('data.json', 'w') as f:
+        json.dump(data, f)
+
+    # Reading data back
+    with open('data.json', 'r') as f:
+        data = json.load(f)
+
+    # SON编码支持的基本数据类型为 None ， bool ， int ， float 和 str ， 以及包含这些
+    # 类型数据的lists，tuples和dictionaries。
+    # 比如，True会被映射为true，False被映射为false，而None会被映射为null。
+    json.dumps(False)  # false
+    d = {'a': True,
+         'b': 'Hello',
+         'c': None}
+    json.dumps(d)  # '{"b": "Hello", "c": null, "a": true}'
+
+    # Using pprint let the code more beauty
+    from pprint import pprint
+    pprint(d)
+
+    # 一般来讲，JSON解码会根据提供的数据创建dicts或lists。 如果你想要创建其他类型的对象，
+    # 可以给 json.loads() 传递object_pairs_hook或object_hook参数。
+    # 例如，下面是演示如何解码JSON数据并在一个OrderedDict中保留其顺序的例子：
+    s = '{"name": "ACME", "shares": 50, "price": 490.1}'
+    from collections import OrderedDict
+    data = json.loads(s, object_pairs_hook=OrderedDict)
+    print(data)
+
+    # 下面是如何将一个JSON字典转换为一个Python对象例子：
+    class JSONObject:
+        def __init__(self, d):
+            self.__dict__ = d
+    data = json.loads(s, object_hook=JSONObject)
+    print(data.name)
+    print(data.shares)
+    print(data.price)
+
+    data = json.loads(s, object_pairs_hook=OrderedDict)
+    print(json.dumps(data))
+    print(json.dumps(data, indent=4))
+
+    # 如果你想序列化对象实例，你可以提供一个函数，它的输入是一个实例，
+    # 返回一个可序列化的字典。例如：
+    def serialize_instance(obj):
+        d = {'__classname__': type(obj).__name__}
+        d.update(vars(obj))
+        return d
+    # 如果你想反过来获取这个实例，可以这样做：
+    # Dictionary mapping names to known classes
+    class Point:
+        def __init__(self, x, y):
+            self.x = x
+            self.y = y
+
+    classes = {
+        'Point': Point
+    }
+
+    def unserialize_object(d):
+        clsname = d.pop('__classname__', None)
+        if clsname:
+            cls = classes[clsname]
+            obj = cls.__new__(cls)  # Make instance without calling __init__
+            for key, value in d.items():
+                setattr(obj, key, value)
+            return obj
+        else:
+            return d
+
+    p = Point(2, 3)
+    s = json.dumps(p, default=serialize_instance)
+    print(s)  # '{"__classname__": "Point", "y": 3, "x": 2}'
+    a = json.loads(s, object_hook=unserialize_object)
+    print(a)
+    print(a.x)
+    print(a.y)
+
+
+if __name__ == '__main__':
+    # read_and_write_csv_data()
+    read_and_write_json_data()
