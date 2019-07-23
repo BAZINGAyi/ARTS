@@ -214,6 +214,21 @@ def read_and_write_json_data():
     print(a.y)
 
 
+# Question3: Encoding and decoding hexadecimal numbers
+def encoding_and_decoding_hexadecimal_numbers():
+    # You want to decode a hex string into a byte string or encode a byte string
+    # into a hex string
+    # Initial byte string
+    s = b'hello'
+    # Encode as hex
+    import binascii
+    h = binascii.b2a_hex(s)
+    print(h)
+    # Decode back to bytes
+    print(binascii.a2b_hex(h))
+
+
 if __name__ == '__main__':
     # read_and_write_csv_data()
-    read_and_write_json_data()
+    # read_and_write_json_data()
+    encoding_and_decoding_hexadecimal_numbers()
