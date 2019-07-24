@@ -247,8 +247,62 @@ def encoding_and_decoding_base64_data():
     print(a)
 
 
+# Question5: Read and write binary array data
+def read_write_binary_array_data():
+    # You want to read and write a binary array of structured data
+    # into a Python tuple.
+    # Binary data can be processed using the structure module.
+    from struct import Struct
+    def write_records(records, format, f):
+        '''
+        Write a sequence of tuples to a binary file of structures.
+        '''
+        record_struct = Struct(format)
+        for r in records:
+            f.write(record_struct.pack(*r))
+
+    # Example
+    if __name__ == '__main__':
+        records = [(1, 2.3, 4.5),
+                   (6, 7.8, 9.0),
+                   (12, 13.4, 56.7)]
+        with open('data.b', 'wb') as f:
+            write_records(records, '<idd', f)
+
+    # First, if you plan to read the file in increments of blocks
+    from struct import Struct
+
+    def read_records(format, f):
+        record_struct = Struct(format)
+        chunks = iter(lambda: f.read(record_struct.size), b'')
+        return (record_struct.unpack(chunk) for chunk in chunks)
+
+    # Example
+
+    with open('data.b', 'rb') as f:
+        for rec in read_records('<idd', f):
+            # Process rec
+            pass
+
+    # 如果你想将整个文件一次性读取到一个字节字符串中，然后在分片解析。那么你可以这样做：
+    from struct import Struct
+
+    def unpack_records(format, data):
+        record_struct = Struct(format)
+        return (record_struct.unpack_from(data, offset)
+                for offset in range(0, len(data), record_struct.size))
+
+    # Example
+    with open('data.b', 'rb') as f:
+        data = f.read()
+    for rec in unpack_records('<idd', data):
+        # Process rec
+        pass
+
+
 if __name__ == '__main__':
     # read_and_write_csv_data()
     # read_and_write_json_data()
     # encoding_and_decoding_hexadecimal_numbers()
-    encoding_and_decoding_base64_data()
+    # encoding_and_decoding_base64_data()
+    read_write_binary_array_data()
