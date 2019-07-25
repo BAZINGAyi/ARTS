@@ -183,11 +183,9 @@ def define_a_function_with_default_parameters():
 if __name__ == "__main__":
 
     # create_a_funcaton_that_acceptes_any_number_of_argements()
-
     # create_a_funcation_that_accepts_only_keyword_arguments()
-
     # add_meta_information_to_function_parameters()
-
     # return_a_function_with_multiple_values()
-
     define_a_function_with_default_parameters()
+
+
