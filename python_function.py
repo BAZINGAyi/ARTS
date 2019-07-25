@@ -97,10 +97,23 @@ def add_meta_information_to_function_parameters():
     # {'y': <class 'int'>, 'return': <class 'int'>, 'x': <class 'int'>}
 
 
+# Question4: return a function with multiple values
+def return_a_function_with_multiple_values():
+    def myfun():
+        return 1, 2, 3
+    a, b, c = myfun()
+    # 看起来元组返回了多个值，实际上先创建了一个元组后返回的。
+    print(a, b, c)
+    x = myfun()
+    print(x)
+
+
 if __name__ == "__main__":
 
-    create_a_funcaton_that_acceptes_any_number_of_argements()
+    # create_a_funcaton_that_acceptes_any_number_of_argements()
 
-    create_a_funcation_that_accepts_only_keyword_arguments()
+    # create_a_funcation_that_accepts_only_keyword_arguments()
 
-    add_meta_information_to_function_parameters()
+    # add_meta_information_to_function_parameters()
+
+    return_a_function_with_multiple_values()
