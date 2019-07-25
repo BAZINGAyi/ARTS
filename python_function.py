@@ -108,6 +108,78 @@ def return_a_function_with_multiple_values():
     print(x)
 
 
+# Question5: Define a function with default parameters
+def define_a_function_with_default_parameters():
+    def spam(a, b=42):
+        print(a, b)
+
+    spam(1)  # Ok. a=1, b=42
+    spam(1, 2)  # Ok. a=1, b=2
+    # 如果默认的参数是一个可修改的容器，比如一个列表或者字典，可以使用 None 作为默认值
+    # Using a list as a default value
+    def spam(a, b=None):
+        if b is None:
+            b = []
+
+    # 如果不想提供默认值，仅仅测试某个默认参数是不是有传递进来：
+    _no_value = object()
+    def spam(a, b=_no_value):
+        if b is _no_value:
+            print('No b value supplied')
+    spam(1)
+    spam(1, 2)
+    spam(1, None)
+
+    # In-depth
+    # 默认的参数仅在函数定义时赋值一次
+    x = 42
+    def spam(a, b=x):
+        print(a, b)
+
+    spam(1)
+    x = 23  # Has no effect
+    spam(1)
+
+    # 默认参数应该是不可变的对象，如None、True、False、数字或字符串
+    # 千万不要这样写：
+    def spam(a, b=[]):  # NO!
+        print(b)
+        return b
+    x = spam(1)
+    print(x)  # []
+    x.append(99)
+    x.append('Yow!')
+    print(x)  # [99, 'Yow!']
+    spam(1)  # [99, 'Yow!'] Modified list gets returned!
+
+    # 好是将默认值设为None， 然后在函数里面检查它，前面的例子就是这样做的。
+
+    # 在测试None值时使用 is 操作符是很重要的，也是这种方案的关键点。
+    # 有时候大家会犯下下面这样的错误：
+    def spam(a, b=None):
+        if not b:  # NO! Use 'b is None' instead
+            b = []
+    # 这么写的问题在于尽管None值确实是被当成False， 但是还有其他的对象(比如长度为0的字符串
+    # 、列表、元组、字典等)都会被当做False。 因此，上面的代码会误将一些其他输入也当成是
+    # 没有输入。比如：
+    spam(1)  # OK
+    x = []
+    spam(1, x)  # Silent error. x value overwritten by default
+    spam(1, 0)  # Silent error. 0 ignored
+    spam(1, '')  # Silent error. '' ignored
+
+    # 有些时候那就是一个函数需要测试某个可选参数是否被使用者传递进来。 这时候需要小心的是你
+    # 不能用某个默认值比如None、 0或者False值来测试用户提供的值(因为这些值都是合法的值，
+    # 是可能被用户传递进来的)。
+
+    # 为了解决这个问题，你可以创建一个独一无二的对象实例，在函数里面，你可以通过检查被传递
+    # 参数值跟这个实例是否一样来判断。
+
+    # 这里对 object() 的使用看上去有点不太常见。object 是python中所有类的基类。
+    # 你可以创建 object 类的实例，但是这些实例没什么实际用处，因为它并没有任何有用的方法，
+    # 也没有任何实例数据(因为它没有任何的实例字典，你甚至都不能设置任何属性值)。
+
+
 if __name__ == "__main__":
 
     # create_a_funcaton_that_acceptes_any_number_of_argements()
@@ -116,4 +188,6 @@ if __name__ == "__main__":
 
     # add_meta_information_to_function_parameters()
 
-    return_a_function_with_multiple_values()
+    # return_a_function_with_multiple_values()
+
+    define_a_function_with_default_parameters()
