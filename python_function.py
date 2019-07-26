@@ -191,6 +191,51 @@ def define_anonymous_or_line_functions():
     print(sorted(names, key=lambda name: name.split()[-1].lower()))
 
 
+# Question7: Anonymous function captures variable values
+def anonymous_function_captures_variable_values():
+    x = 10
+    a = lambda y: x + y
+    x = 20
+    b = lambda y: x + y
+    print(a, b)
+    # 这其中的奥妙在于lambda表达式中的x是一个自由变量， 在运行时绑定值，而不是定义时就绑定，
+    # 这跟函数的默认值参数定义是不同的。 因此，在调用这个lambda表达式的时候，x的值是执行时的值。
+    x = 15
+    print(a(10))  # 25
+    x = 3
+    print(b(x))   # 13
+
+    # 如果你想让某个匿名函数在定义时就捕获到值，可以将那个参数值定义成默认参数即可，
+    # 就像下面这样：
+    x = 10
+    a = lambda y, x=x: x + y
+    x = 20
+    b = lambda y, x=x: x + y
+    print(a(10))
+    print(b(10))
+
+    # 在这里列出来的问题是新手很容易犯的错误，有些新手可能会不恰当的使用lambda表达式。
+    #  比如，通过在一个循环或列表推导中创建一个lambda表达式列表，并期望函数能在定义时就
+    # 记住每次的迭代值。例如,但是实际效果是运行是n的值为迭代的最后一个值
+    funcs = [lambda x: x + n for n in range(5)]
+    for f in funcs:
+        print(f(0))
+    # 4
+    # 4
+    # 4
+    # 4
+    # 4
+
+    funcs = [lambda x, n=n: x + n for n in range(5)]
+    for f in funcs:
+        print(f(0))
+    # 0
+    # 1
+    # 2
+    # 3
+    # 4
+
+
 if __name__ == "__main__":
 
     # create_a_funcaton_that_acceptes_any_number_of_argements()
@@ -198,6 +243,7 @@ if __name__ == "__main__":
     # add_meta_information_to_function_parameters()
     # return_a_function_with_multiple_values()
     # define_a_function_with_default_parameters()
-    define_anonymous_or_line_functions()
+    # define_anonymous_or_line_functions()
+    anonymous_function_captures_variable_values()
 
 
