@@ -180,12 +180,24 @@ def define_a_function_with_default_parameters():
     # 也没有任何实例数据(因为它没有任何的实例字典，你甚至都不能设置任何属性值)。
 
 
+# Question6: Define anonymous or inline functions
+def define_anonymous_or_line_functions():
+    add = lambda x, y: x + y
+    print(add(2, 3))
+    print(add('hello', 'boy'))
+
+    names = ['David Beazley', 'Brian Jones',
+             'Raymond Hettinger', 'Ned Batchelder']
+    print(sorted(names, key=lambda name: name.split()[-1].lower()))
+
+
 if __name__ == "__main__":
 
     # create_a_funcaton_that_acceptes_any_number_of_argements()
     # create_a_funcation_that_accepts_only_keyword_arguments()
     # add_meta_information_to_function_parameters()
     # return_a_function_with_multiple_values()
-    define_a_function_with_default_parameters()
+    # define_a_function_with_default_parameters()
+    define_anonymous_or_line_functions()
 
 
