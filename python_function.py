@@ -398,6 +398,110 @@ def convert_a_single_method_class_to_a_function():
     # 相比将你的函数转换成一个类而言，闭包通常是一种更加简洁和优雅的方案。
 
 
+# Question10: callback function with extra status information
+def callback_function_with_extra_status_information():
+    # 你的代码中需要依赖到回调函数的使用(比如事件处理器、等待后台任务完成后的回调等)，
+    # 还需要让回调函数拥有额外的状态值，以便在它的内部使用到。
+    # 在很多函数库和框架中的回调函数的使用——特别是跟异步处理有关的。 为了演示与测试，
+    # 我们先定义如下一个需要调用回调函数的函数：
+    def apply_async(func, args, *, callback):
+        # Compute the result
+        result = func(*args)
+
+        # Invoke the callback with the result
+        callback(result)
+
+    # 实际上，这段代码可以做任何更高级的处理，包括线程、进程和定时器，但是这些都不是我们
+    # 要关心的。 我们仅仅只需要关注回调函数的调用。下面是一个演示怎样使用上述代码的例子
+
+    def print_result(result):
+        print('Got:', result)
+
+    def add(x, y):
+        return x + y
+
+    apply_async(add, (2, 3), callback=print_result)  # Got: 5
+
+    apply_async(add, ('hello', 'world'), callback=print_result)
+    # Got: hello world
+
+    # 注意到 print_result() 函数仅仅只接受一个参数 result 。不能再传入其他信息。
+    # 而当你想让回调函数访问其他变量或者特定环境的变量值的时候就会遇到麻烦。
+
+    # 为了让回调函数访问外部信息，一种方法是使用一个绑定方法来代替一个简单函数。
+    # 比如，下面这个类会保存一个内部序列号，每次接收到一个 result 的时候序列号加1
+
+    class ResultHandler:
+
+        def __init__(self):
+            self.sequence = 0
+
+        def handler(self, result):
+            self.sequence += 1
+            print('[{}] Got: {}'.format(self.sequence, result))
+
+    # 使用这个类的时候，你先创建一个类的实例，然后用它的 handler() 绑定方法来做为回调函数：
+    r = ResultHandler()
+    apply_async(add, (2, 3), callback=r.handler)  # Got: 5
+    apply_async(add, ('hello', 'world'), callback=r.handler)  # Got: helloworld
+
+    # The second way, as an alternative to a class, can use a closure to capture
+    # state values, for example:
+
+    def make_handler():
+        sequence = 0
+
+        def handler(result):
+            nonlocal sequence
+            sequence += 1
+            print('[{}] Got: {}'.format(sequence, result))
+
+        return handler
+
+    # The following is an example of using closure
+    handler = make_handler()
+    apply_async(add, (2, 3), callback=handler)  # Got: 5
+    apply_async(add, ('hello', 'world'), callback=handler)  # Got: helloworld
+
+    # There is another, more advanced way to do the same thing using coroutines:
+    def make_handler():
+        sequence = 0
+        while True:
+            result = yield
+            sequence += 1
+            print('[{}] Got: {}'.format(sequence, result))
+
+    # For coroutines, you need to use its send() method as a callback function,
+    # as shown below:
+    handler = make_handler()
+    next(handler)  # Advance to the yield
+    apply_async(add, (2, 3), callback=handler.send)  # Got: 5
+    apply_async(add, ('hello', 'world'), callback=handler.send)
+    # Got: helloworld
+
+    # 基于回调函数的软件通常都有可能变得非常复杂。一部分原因是回调函数通常会跟请求执行代码
+    # 断开。 因此，请求执行和处理结果之间的执行环境实际上已经丢失了。如果你想让回调函数连续
+    # 执行多步操作， 那你就必须去解决如何保存和恢复相关的状态信息了。
+
+    # 至少有两种主要方式来捕获和保存状态信息，你可以在一个对象实例(通过一个绑定方法)或者在一
+    # 个闭包中保存它。 两种方式相比，闭包或许是更加轻量级和自然一点，因为它们可以很简单的通
+    # 过函数来构造。 它们还能自动捕获所有被使用到的变量。因此，你无需去担心如何去存储额外
+    # 的状态信息(代码中自动判定)。
+
+    # 如果使用闭包，你需要注意对那些可修改变量的操作。在上面的方案中， nonlocal 声明语句用
+    # 来指示接下来的变量会在回调函数中被修改。如果没有这个声明，代码会报错。
+
+    # 而使用一个协程来作为一个回调函数就更有趣了，它跟闭包方法密切相关。 某种意义上来讲，它
+    # 显得更加简洁，因为总共就一个函数而已。 并且，你可以很自由的修改变量而无需去使用
+    #  nonlocal 声明。 这种方式唯一缺点就是相对于其他Python技术而言或许比较难以理解。
+    #  另外还有一些比较难懂的部分，比如使用之前需要调用 next() ，实际使用时这个步骤很容
+    # 易被忘记。 尽管如此，协程还有其他用处，比如作为一个内联回调函数的定义(下一节会讲到)。
+
+    # 如果你仅仅只需要给回调函数传递额外的值的话，还有一种使用 partial() 的方式也很有用。
+    # 在没有使用 partial() 的时候，你可能经常看到下面这种使用lambda表达式的复杂代码：
+    # apply_async(add, (2, 3), callback=lambda r: handler(r, seq)) # Got: 5
+
+
 if __name__ == "__main__":
 
     # create_a_funcaton_that_acceptes_any_number_of_argements()
@@ -407,6 +511,8 @@ if __name__ == "__main__":
     # define_a_function_with_default_parameters()
     # define_anonymous_or_line_functions()
     # anonymous_function_captures_variable_values()
-    reduce_the_number_of_parameters_of_the_callable_object()
+    # reduce_the_number_of_parameters_of_the_callable_object()
+    # convert_a_single_method_class_to_a_function()
+    callback_function_with_extra_status_information()
 
 
