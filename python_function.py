@@ -594,6 +594,120 @@ def inline_callback_function():
     # 中也包含了非常类似的内联回调。
 
 
+# Question12: Access variables defined in the closure
+def access_variables_defined_in_the_closure():
+    # In general, the internal variables of the closure are completely hidden
+    # from the outside world. However, you can do this by writing an access
+    # function and binding it as a function property to the closure.
+
+    def sample():
+        n = 0
+
+        # Closure function
+        def func():
+            print('n=', n)
+
+        # Accessor methods for n
+        def get_n():
+            return n
+
+        def set_n(value):
+            # The nonlocal declaration allow us to write functions to modify
+            # the value of an internal variable.
+            nonlocal n
+            n = value
+
+        # Attach as function attributes
+        # Function attributes allow us to bind methods to functions.
+        func.get_n = get_n
+        func.set_n = set_n
+        return func
+
+    f = sample()
+    f()
+    f.set_n(10)  # 10
+    f()
+    f.get_n()    # 10
+
+    # 还可以进一步的扩展，让闭包模拟类的实例。你要做的仅仅是复制上面的内部函数到一个字典实例
+    # 中并返回它即可。例如：
+    import sys
+    class ClosureInstance:
+        def __init__(self, locals=None):
+            if locals is None:
+                locals = sys._getframe(1).f_locals
+
+            # Update instance dictionary with callables
+            self.__dict__.update((key, value) for key, value in locals.items()
+                                 if callable(value))
+
+        # Redirect special methods
+        def __len__(self):
+            return self.__dict__['__len__']()
+
+    # Example use
+    def Stack():
+        items = []
+
+        def push(item):
+            items.append(item)
+
+        def pop():
+            return items.pop()
+
+        def __len__():
+            return len(items)
+
+        return ClosureInstance()
+
+    s = Stack()
+    print(s)
+    s.push(10)
+    s.push(20)
+    s.push('Hello')
+    print(len(s))
+    s.pop()
+    s.pop()
+    s.pop()
+
+    # 有趣的是，这个代码运行起来会比一个普通的类定义要快很多。你可能会像下面这样
+    # 测试它跟一个类的性能对比：
+    class Stack2:
+        def __init__(self):
+            self.items = []
+
+        def push(self, item):
+            self.items.append(item)
+
+        def pop(self):
+            return self.items.pop()
+
+        def __len__(self):
+            return len(self.items)
+
+    from timeit import timeit
+    # Test involving closures
+    # s = Stack()
+    # print(timeit('s.push(1);s.pop()', 'from __main__ import s'))
+    # Test involving a class
+    # s = Stack2()
+    # print(timeit('s.push(1);s.pop()', 'from __main__ import s'))
+
+    # 结果显示，闭包的方案运行起来要快大概8%，大部分原因是因为对实例变量的简化访问，
+    # 闭包更快是因为不会涉及到额外的 self 变量。
+
+    # Raymond Hettinger对于这个问题设计出了更加难以理解的改进方案。不过，你得考虑下是否真
+    # 的需要在你代码中这样做， 而且它只是真实类的一个奇怪的替换而已，例如，类的主要特性如
+    # 继承、属性、描述器或类方法都是不能用的。
+
+    # 最后，你可能还会让其他阅读你代码的人感到疑惑，为什么它看起来不像一个普通的类定义呢？
+    #  (当然，他们也想知道为什么它运行起来会更快)。尽管如此，这对于怎样访问闭包的内部变量
+    # 也不失为一个有趣的例子。
+
+    # 总体上讲，在配置的时候给闭包添加方法会有更多的实用功能， 比如你需要重置内部状态、
+    # 刷新缓冲区、清除缓存或其他的反馈机制的时候。
+
+
 if __name__ == "__main__":
 
     # create_a_funcaton_that_acceptes_any_number_of_argements()
@@ -606,6 +720,7 @@ if __name__ == "__main__":
     # reduce_the_number_of_parameters_of_the_callable_object()
     # convert_a_single_method_class_to_a_function()
     # callback_function_with_extra_status_information()
-    inline_callback_function()
+    # inline_callback_function()
+    access_variables_defined_in_the_closure()
 
 
