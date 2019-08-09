@@ -254,6 +254,50 @@ class StudyOOP():
         D()
         D.mro()
 
+    def change_string_representation_of_the_object(self):
+        # To change the string representation of an instance, redefine its
+        # __str__() and __repr__() methods
+        class Pair:
+            def __init__(self, x, y):
+                self.x = x
+                self.y = y
+
+            # The  __repr__() method returns the code representation of an
+            #  instance
+            def __repr__(self):
+                return 'Pair({0.x!r}, {0.y!r})'.format(self)
+
+            # The __str__() method converts the instance to a string
+            def __str__(self):
+                return '({0.x!s}, {0.y!s})'.format(self)
+
+        p = Pair(3, 4)
+        p  # Pair(3, 4) # __repr__() output
+        print(p)  # (3, 4) # __str__() output
+
+        # 使用 !r 在 print 中格式化代码，输出的内容是 __repr__ 而不是 __str__()
+        print('p is {0!r}'.format(p))  # p is Pair(3, 4)
+        print('p is {0}'.format(p))  # print('p is {0}'.format(p))
+
+        # __repr__() 生成的文本字符串标准做法是需要让 eval(repr(x)) == x 为真。
+        #  如果实在不能这样子做，应该创建一个有用的文本表示，并使用 < 和 > 括起来。比如：
+        # >>> f = open('file.dat')
+        # >>> f
+        # <_io.TextIOWrapper name='file.dat' mode='r' encoding='UTF-8'>
+        # >>>
+
+        # 如果 __str__() 没有被定义，那么就会使用 __repr__() 来代替输出。
+
+        # 上面的 format() 方法的使用看上去很有趣，格式化代码 {0.x} 对应的是第1个参数
+        # 的x属性。 因此，在下面的函数中，0实际上指的就是 self 本身：
+
+        def __repr__(self):
+            return 'Pair({0.x!r}, {0.y!r})'.format(self)
+
+        # 作为这种实现的一个替代，你也可以使用 % 操作符，就像下面这样：
+        def __repr__(self):
+            return 'Pair(%r, %r)' % (self.x, self.y)
+
 
 if __name__ == '__main__':
     # traverse_all_property_in_class()
@@ -264,4 +308,5 @@ if __name__ == '__main__':
     # study_OOP.understand_OOP1()
     # study_OOP.understand_OOP_Extend()
     # study_OOP.understand_OOP_Extend2()
-    study_OOP.understand_init_sequence_in_extend()
+    # study_OOP.understand_init_sequence_in_extend()
+    study_OOP.change_string_representation_of_the_object()
