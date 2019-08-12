@@ -298,6 +298,40 @@ class StudyOOP():
         def __repr__(self):
             return 'Pair(%r, %r)' % (self.x, self.y)
 
+    def let_an_object_support_custom_formatting(self):
+        _formats = {
+            'ymd': '{d.year}-{d.month}-{d.day}',
+            'mdy': '{d.month}/{d.day}/{d.year}',
+            'dmy': '{d.day}/{d.month}/{d.year}'
+        }
+
+        class Date:
+            def __init__(self, year, month, day):
+                self.year = year
+                self.month = month
+                self.day = day
+
+            def __format__(self, code):
+                if code == '':
+                    code = 'ymd'
+                fmt = _formats[code]
+                return fmt.format(d=self)
+
+        d = Date(2012, 12, 21)
+        print(format(d))
+        print(format(d, 'mdy'))
+        print('The date is {:ymd}'.format(d))
+        print('The date is {:mdy}'.format(d))
+
+        # __format__() 方法给Python的字符串格式化功能提供了一个钩子。 这里需要着重强调的
+        # 是格式化代码的解析工作完全由类自己决定。因此，格式化代码可以是任何值。
+        #  例如，参考下面来自 datetime 模块中的代码：
+        from datetime import date
+        d = date(2012, 12, 21)
+        print(format(d))
+        print(format(d,'%A, %B %d, %Y'))
+        print('The end is {:%d %b %Y}. Goodbye'.format(d))
+
 
 if __name__ == '__main__':
     # traverse_all_property_in_class()
@@ -309,4 +343,5 @@ if __name__ == '__main__':
     # study_OOP.understand_OOP_Extend()
     # study_OOP.understand_OOP_Extend2()
     # study_OOP.understand_init_sequence_in_extend()
-    study_OOP.change_string_representation_of_the_object()
+    # study_OOP.change_string_representation_of_the_object()
+    study_OOP.let_an_object_support_custom_formatting()
