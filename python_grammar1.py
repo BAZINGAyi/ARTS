@@ -689,6 +689,7 @@ if __name__ == '__main__':
 
     # delayed_binding()
 
+    # generator and iterator start =================
     # manual_traversal_iterator()
     # proxy_iteration()
     # create_iterator_by_using_generator()
