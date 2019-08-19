@@ -708,6 +708,99 @@ def access_variables_defined_in_the_closure():
     # 刷新缓冲区、清除缓存或其他的反馈机制的时候。
 
 
+class StudyDecorator(object):
+
+    def simple_decorator(self):
+
+        def my_decorator(func):
+            def wrapper():
+                print('wrapper of decorator')
+                func()
+
+            return wrapper
+
+        def greet():
+            print('hello world')
+
+        greet = my_decorator(greet)
+        greet()
+
+        # wrapper of decorator
+        # hello world
+
+        # 其实做法很简单，就是将变量 greet 指向了内部函数 wrapper() , 而 wrapper() 函数
+        # 又会调用原函数 greet()
+        # my_decorator() 就是一个装饰器，把真正需要执行的函数 greet() 包裹在其中
+
+    def syntactic_sugar_decorator(self):
+
+        def my_decorator(func):
+            def wrapper():
+                print('wrapper of decorator')
+                func()
+
+            return wrapper
+
+        @my_decorator
+        def greet():
+            print('hello world')
+
+        # 其实就是省去了 greet = my_decorator(greet) 这一步
+
+        greet()
+
+    def the_decorator_with_parameter(self):
+        # Method1: 在 wrapper 加上参数
+        def my_decorator(func):
+            def wrapper(message):
+                print('wrapper of decorator')
+                func(message)
+
+            return wrapper
+
+        @my_decorator
+        def greet(message):
+            print(message)
+
+        greet('hello world')
+
+        # Method2: 使用 *args 和 **kwargs 表示任意数量和类型的参数
+        def my_decorator(func):
+            def wrapper(*args, **kwargs):
+                print('wrapper of decorator')
+                func(*args, **kwargs)
+            return wrapper
+
+    def the_decorator_with_custom_parameter(self):
+        def repeat(num):
+            def my_decorator(func):
+                def wrapper(*args, **kwargs):
+                    for i in range(num):
+                        print('wrapper of decorator')
+                        func(*args, **kwargs)
+
+                return wrapper
+
+            return my_decorator
+
+        def greet(message):
+            print(message)
+
+        # Method1:
+        inner = repeat(4)
+        greet = inner(greet)
+        greet('hello world')
+
+        # Method2:
+        greet = repeat(4)(greet)
+        greet('hello world')
+
+        # Method3: @repeat(4) 等于 @my_decorator
+        @repeat(4)
+        def greet(message):
+            print(message)
+
+
 if __name__ == "__main__":
 
     # create_a_funcaton_that_acceptes_any_number_of_argements()
@@ -721,6 +814,12 @@ if __name__ == "__main__":
     # convert_a_single_method_class_to_a_function()
     # callback_function_with_extra_status_information()
     # inline_callback_function()
-    access_variables_defined_in_the_closure()
+    # access_variables_defined_in_the_closure()
+
+    studyDecorator = StudyDecorator()
+    # studyDecorator.simple_decorator()
+    # studyDecorator.syntactic_sugar_decorator()
+    # studyDecorator.the_decorator_with_parameter()
+    studyDecorator.the_decorator_with_custom_parameter()
 
 
