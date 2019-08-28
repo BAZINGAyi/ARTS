@@ -115,7 +115,7 @@ class FuturesStudy(object):
         def download_one(url):
             resp = requests.get(url)
             print('Read {} from {}'.format(len(resp.content), url))
-            return 'success' + url
+            return 'Read {} from {}'.format(len(resp.content), url)
 
         def download_all(sites):
             with concurrent.futures.ThreadPoolExecutor(
@@ -125,8 +125,14 @@ class FuturesStudy(object):
                     future = executor.submit(download_one, site)
                     to_do.append(future)
 
+                test_list = []
                 for future in concurrent.futures.as_completed(to_do):
-                    print(future.result())
+                    test_list.append(future.result())
+
+                print(test_list.__len__())
+                for i in test_list:
+                    print(i)
+
 
         def main():
             sites = [
@@ -156,10 +162,44 @@ class FuturesStudy(object):
         main()
 
 
+class Python2Thread(object):
+    @staticmethod
+    def thread_and_queue():
+        import threading
+        from queue import Queue
+
+        def job(l, queue):
+            for i in range(len(l)):
+                l[i] = l[i] ** 2
+            queue.put(l)
+
+        def multithreading():
+            q = Queue()
+            threads = []
+            data = [[1, 2, 3], [3, 4, 5], [4, 4, 4], [5, 5, 5]]
+            for i in range(len(data)):
+                t = threading.Thread(target=job, args=(data[i], q))
+                t.start()
+                threads.append(t)
+            for thread in threads:
+                thread.join()
+            results = []
+
+            while not q.empty():
+                results.append(q.get())
+
+            print(results)
+
+        multithreading()
+
+
 if __name__ == '__main__':
 
     # single_thread_download()
 
     # multi_thread_download()
 
-    FuturesStudy.study_futures()
+    # FuturesStudy.study_futures()
+
+    python2_thread = Python2Thread()
+    python2_thread.thread_and_queue()
