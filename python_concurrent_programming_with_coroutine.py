@@ -200,7 +200,6 @@ class AsyncioStudyPython36(object):
         loop.run_until_complete(task)
         print('TIME: ', now() - start)
 
-
     @staticmethod
     def get_movies_from_douban_with_synchronous():
         import requests
@@ -325,6 +324,49 @@ class AsyncioStudyPython36(object):
         # worker_2 done
         # awaited worker_2
         # TIME:  0:00:02.000649
+
+
+    @staticmethod
+    def download_wiki():
+        import asyncio
+        import aiohttp
+        import time
+
+        async def download_one(url):
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as resp:
+                    print('Read {} from {}'.format(resp.content_length, url))
+
+        async def download_all(sites):
+            tasks = [asyncio.ensure_future(download_one(site)) for site in sites]
+            await asyncio.gather(*tasks)
+
+        def main():
+            sites = [
+                'https://en.wikipedia.org/wiki/Portal:Arts',
+                'https://en.wikipedia.org/wiki/Portal:History',
+                'https://en.wikipedia.org/wiki/Portal:Society',
+                'https://en.wikipedia.org/wiki/Portal:Biography',
+                'https://en.wikipedia.org/wiki/Portal:Mathematics',
+                'https://en.wikipedia.org/wiki/Portal:Technology',
+                'https://en.wikipedia.org/wiki/Portal:Geography',
+                'https://en.wikipedia.org/wiki/Portal:Science',
+                'https://en.wikipedia.org/wiki/Computer_science',
+                'https://en.wikipedia.org/wiki/Python_(programming_language)',
+                'https://en.wikipedia.org/wiki/Java_(programming_language)',
+                'https://en.wikipedia.org/wiki/PHP',
+                'https://en.wikipedia.org/wiki/Node.js',
+                'https://en.wikipedia.org/wiki/The_C_Programming_Language',
+                'https://en.wikipedia.org/wiki/Go_(programming_language)'
+            ]
+            start_time = time.perf_counter()
+            loop = asyncio.get_event_loop()
+            task = loop.create_task(download_all(sites))
+            loop.run_until_complete(task)
+            end_time = time.perf_counter()
+            print('Download {} sites in {} seconds'.format(
+                len(sites), end_time - start_time))
+        main()
 
 
 class AsyncioStudyPython37(object):
@@ -522,6 +564,47 @@ class AsyncioStudyPython37(object):
             await asyncio.gather(*tasks)
             asyncio.run(main(['url_1', 'url_2', 'url_3', 'url_4']))
 
+    @staticmethod
+    def download_wiki():
+        import asyncio
+        import aiohttp
+        import time
+
+        async def download_one(url):
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url) as resp:
+                    print('Read {} from {}'.format(resp.content_length, url))
+
+        async def download_all(sites):
+            tasks = [asyncio.create_task(download_one(site)) for site in sites]
+            await asyncio.gather(*tasks)
+
+        def main():
+            sites = [
+                'https://en.wikipedia.org/wiki/Portal:Arts',
+                'https://en.wikipedia.org/wiki/Portal:History',
+                'https://en.wikipedia.org/wiki/Portal:Society',
+                'https://en.wikipedia.org/wiki/Portal:Biography',
+                'https://en.wikipedia.org/wiki/Portal:Mathematics',
+                'https://en.wikipedia.org/wiki/Portal:Technology',
+                'https://en.wikipedia.org/wiki/Portal:Geography',
+                'https://en.wikipedia.org/wiki/Portal:Science',
+                'https://en.wikipedia.org/wiki/Computer_science',
+                'https://en.wikipedia.org/wiki/Python_(programming_language)',
+                'https://en.wikipedia.org/wiki/Java_(programming_language)',
+                'https://en.wikipedia.org/wiki/PHP',
+                'https://en.wikipedia.org/wiki/Node.js',
+                'https://en.wikipedia.org/wiki/The_C_Programming_Language',
+                'https://en.wikipedia.org/wiki/Go_(programming_language)'
+            ]
+            start_time = time.perf_counter()
+            asyncio.run(download_all(sites))
+            end_time = time.perf_counter()
+            print('Download {} sites in {} seconds'.format(
+                len(sites), end_time - start_time))
+
+        main()
+
 
 if __name__ == '__main__':
     # AsyncioStudyPython37.synchronous_execution_python37()
@@ -535,5 +618,6 @@ if __name__ == '__main__':
     #     .limit_runtime_and_set_error_handling_for_coroutine_tasks())
     # AsyncioStudyPython36.customer_and_produce_model()
     # AsyncioStudyPython36.get_movies_from_douban_with_asynchronous()
-    AsyncioStudyPython36.add_callback_function()
+    # AsyncioStudyPython36.add_callback_function()
+    AsyncioStudyPython36.download_wiki()
 
