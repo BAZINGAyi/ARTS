@@ -16,7 +16,10 @@ class AsyncioStudyPython36(object):
         from win32.timezone import now
         start = now()
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(main(['url_1', 'url_2', 'url_3', 'url_4']))
+        try:
+            loop.run_until_complete(main(['url_1', 'url_2', 'url_3', 'url_4']))
+        finally:
+            loop.close()
         print('TIME: ', now() - start)
         # TIME:  0:00:10.004659
 
@@ -40,7 +43,10 @@ class AsyncioStudyPython36(object):
         start = now()
         loop = asyncio.get_event_loop()
         task = loop.create_task(main(['url_1', 'url_2', 'url_3', 'url_4']))
-        loop.run_until_complete(task)
+        try:
+            loop.run_until_complete(task)
+        finally:
+            loop.close()
         print('TIME: ', now() - start)
         # TIME:  0:00:4.004659
 
@@ -107,7 +113,10 @@ class AsyncioStudyPython36(object):
         from win32.timezone import now
         start = now()
         loop = asyncio.get_event_loop()
-        task = loop.create_task(main())
+        try:
+            task = loop.create_task(main())
+        finally:
+            loop.close()
         loop.run_until_complete(task)
         print('TIME: ', now() - start)
 
@@ -276,7 +285,10 @@ class AsyncioStudyPython36(object):
         start = now()
         loop = asyncio.get_event_loop()
         task = loop.create_task(main())
-        loop.run_until_complete(task)
+        try:
+            loop.run_until_complete(task)
+        finally:
+            loop.close()
         print('TIME: ', now() - start)
 
     @staticmethod
@@ -312,7 +324,10 @@ class AsyncioStudyPython36(object):
         start = now()
         loop = asyncio.get_event_loop()
         task = loop.create_task(main())
-        loop.run_until_complete(task)
+        try:
+            loop.run_until_complete(task)
+        finally:
+            loop.close()
         print('TIME: ', now() - start)
 
         ########## 输出 ##########
@@ -362,7 +377,10 @@ class AsyncioStudyPython36(object):
             start_time = time.perf_counter()
             loop = asyncio.get_event_loop()
             task = loop.create_task(download_all(sites))
-            loop.run_until_complete(task)
+            try:
+                loop.run_until_complete(task)
+            finally:
+                loop.close()
             end_time = time.perf_counter()
             print('Download {} sites in {} seconds'.format(
                 len(sites), end_time - start_time))
