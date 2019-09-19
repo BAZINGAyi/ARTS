@@ -37,6 +37,7 @@ def multi_thread_spend_more_time_than_single_thread_in_cpu_bound_task():
 x = 0
 def mock_race_condition():
     import threading
+    import dis
 
     def increment_global():
         global x
@@ -62,6 +63,14 @@ def mock_race_condition():
     for i in range(5):
         main()
         print("x = {1} after Iteration {0}".format(i, x))
+
+    print(dis.dis(increment_global))
+    #  44           0 LOAD_GLOBAL              0 (x)
+    #               2 LOAD_CONST               1 (1)
+    #               4 INPLACE_ADD
+    #               6 STORE_GLOBAL             0 (x)
+    #               8 LOAD_CONST               0 (None)
+    #              10 RETURN_VALUE
 
 
 # Question3:
@@ -132,7 +141,7 @@ if __name__ == '__main__':
 
     # Question2: GIL 下并发多线程，仍然会出现 race condition 的情况，可以使用 Python2
     # 模拟
-    # mock_race_condition()
+    mock_race_condition()
     # x = 78768 after Iteration 0
     # x = 77595 after Iteration 1
     # x = 78273 after Iteration 2
@@ -140,7 +149,7 @@ if __name__ == '__main__':
     # x = 85246 after Iteration 4
 
     # Question3: 3 个线程按照顺序打印 1-100
-    print_number_in_order_in_3_thread()
+    # print_number_in_order_in_3_thread()
 
 
 
