@@ -1,40 +1,84 @@
-def single_thread_download():
-    import requests
-    import time
+class StudyThread(object):
+    @staticmethod
+    def single_thread_download():
+        import requests
+        import time
 
-    def download_one(url):
-        resp = requests.get(url)
-        print('Read {} from {}'.format(len(resp.content), url))
+        def download_one(url):
+            resp = requests.get(url)
+            print('Read {} from {}'.format(len(resp.content), url))
 
-    def download_all(sites):
-        for site in sites:
-            download_one(site)
+        def download_all(sites):
+            for site in sites:
+                download_one(site)
 
-    def main():
-        sites = [
-            'https://en.wikipedia.org/wiki/Portal:Arts',
-            'https://en.wikipedia.org/wiki/Portal:History',
-            'https://en.wikipedia.org/wiki/Portal:Society',
-            'https://en.wikipedia.org/wiki/Portal:Biography',
-            'https://en.wikipedia.org/wiki/Portal:Mathematics',
-            'https://en.wikipedia.org/wiki/Portal:Technology',
-            'https://en.wikipedia.org/wiki/Portal:Geography',
-            'https://en.wikipedia.org/wiki/Portal:Science',
-            'https://en.wikipedia.org/wiki/Computer_science',
-            'https://en.wikipedia.org/wiki/Python_(programming_language)',
-            'https://en.wikipedia.org/wiki/Java_(programming_language)',
-            'https://en.wikipedia.org/wiki/PHP',
-            'https://en.wikipedia.org/wiki/Node.js',
-            'https://en.wikipedia.org/wiki/The_C_Programming_Language',
-            'https://en.wikipedia.org/wiki/Go_(programming_language)'
-        ]
-        start_time = time.perf_counter()
-        download_all(sites)
-        end_time = time.perf_counter()
-        print('Download {} sites in {} seconds'.format(
-            len(sites), end_time - start_time))
-        # Download 15 sites in 32.088936727272724 seconds
-    main()
+        def main():
+            sites = [
+                'https://en.wikipedia.org/wiki/Portal:Arts',
+                'https://en.wikipedia.org/wiki/Portal:History',
+                'https://en.wikipedia.org/wiki/Portal:Society',
+                'https://en.wikipedia.org/wiki/Portal:Biography',
+                'https://en.wikipedia.org/wiki/Portal:Mathematics',
+                'https://en.wikipedia.org/wiki/Portal:Technology',
+                'https://en.wikipedia.org/wiki/Portal:Geography',
+                'https://en.wikipedia.org/wiki/Portal:Science',
+                'https://en.wikipedia.org/wiki/Computer_science',
+                'https://en.wikipedia.org/wiki/Python_(programming_language)',
+                'https://en.wikipedia.org/wiki/Java_(programming_language)',
+                'https://en.wikipedia.org/wiki/PHP',
+                'https://en.wikipedia.org/wiki/Node.js',
+                'https://en.wikipedia.org/wiki/The_C_Programming_Language',
+                'https://en.wikipedia.org/wiki/Go_(programming_language)'
+            ]
+            start_time = time.perf_counter()
+            download_all(sites)
+            end_time = time.perf_counter()
+            print('Download {} sites in {} seconds'.format(
+                len(sites), end_time - start_time))
+            # Download 15 sites in 32.088936727272724 seconds
+        main()
+
+    @staticmethod
+    def start_a_thread():
+        import time
+
+        def countdown(n):
+            while n > 0:
+                print('T-minus', n)
+                n -= 1
+                time.sleep(1)
+
+        # Create and launch a thread
+        from threading import Thread
+        t = Thread(target=countdown, args=(10,))
+        # start running the thread
+        t.start()
+        #  check the status of thread running
+        if t.is_alive():
+            print('Still running')
+        else:
+            print('Completed')
+        # make the main thread waiting for the son thread
+        print('main thread is end')
+        t.join()
+        print('son thread is end')
+
+
+    @staticmethod
+    def start_a_daemon_thread():
+        # 如果设置为 daemon thread，主线程不会等待 daemon 线程，只要所有非
+        # daemon thread 退出后，main 就会退出，并且回收资源。
+        import time
+        from threading import Thread
+
+        def countdown(n):
+            while n > 0:
+                print('T-minus', n)
+                n -= 1
+                time.sleep(1)
+        t = Thread(target=countdown, args=(10,), daemon=True)
+        t.start()
+
 
 
 def multi_thread_download():
@@ -208,7 +252,12 @@ def find_sums(numbers, cpu_bound):
 
 if __name__ == '__main__':
 
-    # single_thread_download()
+    studyThread = StudyThread()
+    # studyThread.single_thread_download()
+    # studyThread.start_a_thread()
+    studyThread.start_a_daemon_thread()
+
+
     #
     # multi_thread_download()
     #
@@ -220,9 +269,9 @@ if __name__ == '__main__':
     # multi processing start
     # 定义在模块顶级的函数才能被 pickable，如果定义在类里或者定义在嵌套函数里，
     # 注意抛出 un pickable 异常
-    numbers = [10000000 + x for x in range(20)]
-    start_time = time.time()
-    find_sums(numbers, cpu_bound)
-    duration = time.time() - start_time
-    print(f"Duration {duration} seconds")
+    # numbers = [10000000 + x for x in range(20)]
+    # start_time = time.time()
+    # find_sums(numbers, cpu_bound)
+    # duration = time.time() - start_time
+    # print(f"Duration {duration} seconds")
     # multi procesing stop
