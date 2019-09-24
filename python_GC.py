@@ -63,6 +63,33 @@ class UnderstandGC(object):
         # 两次引用，一次来自 a，一次来自 getrefcount，函数 func 调用已经不存在
         print(sys.getrefcount(a))
 
+    @staticmethod
+    def manually_call_gc():
+        import gc
+        import os
+        import psutil
+
+        def show_memory_info(hint):
+            pid = os.getpid()
+            p = psutil.Process(pid)
+
+            info = p.memory_full_info()
+            memory = info.uss / 1024. / 1024
+            print('{} memory used: {} MB'.format(hint, memory))
+
+        show_memory_info('initial')
+
+        a = [i for i in range(10000000)]
+
+        show_memory_info('after a created')
+
+        del a
+        gc.collect()
+
+        show_memory_info('finish')
+        # 这里会报错证明已经将 a 回收了
+        print(a)
+
 
 if __name__ == '__main__':
     # 当对象的引用数量为 0 时，会被 GC 回收
@@ -72,5 +99,8 @@ if __name__ == '__main__':
     # UnderstandGC.error_code_refcount_test()
 
     # 查看对象被引用的数量
-    UnderstandGC.understand_object_reference()
+    # UnderstandGC.understand_object_reference()
+
+    # 手动调用 GC 释放对象
+    UnderstandGC.manually_call_gc()
 
