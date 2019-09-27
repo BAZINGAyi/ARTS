@@ -36,6 +36,7 @@ class StudyThread(object):
             print('Download {} sites in {} seconds'.format(
                 len(sites), end_time - start_time))
             # Download 15 sites in 32.088936727272724 seconds
+
         main()
 
     @staticmethod
@@ -63,9 +64,13 @@ class StudyThread(object):
         t.join()
         print('son thread is end')
 
-
     @staticmethod
     def start_a_daemon_thread():
+        """
+        daemon 可以被称为 后台线程，适用于需要长时间或者需要一直运行的任务。
+        这被线程不会被等待，会在主线程终止时自动销毁。
+        :return:
+        """
         # 如果设置为 daemon thread，主线程不会等待 daemon 线程，只要所有非
         # daemon thread 退出后，main 就会退出，并且回收资源。
         import time
@@ -76,9 +81,82 @@ class StudyThread(object):
                 print('T-minus', n)
                 n -= 1
                 time.sleep(1)
+
         t = Thread(target=countdown, args=(10,), daemon=True)
         t.start()
 
+    @staticmethod
+    def scheduling_a_thread():
+        from threading import Thread
+
+        class CountdownTask:
+            def __init__(self):
+                self._running = True
+
+            def terminate(self):
+                self._running = False
+
+            def run(self, n):
+                while self._running and n > 0:
+                    print('T-minus', n)
+                    n -= 1
+                    time.sleep(5)
+
+        c = CountdownTask()
+        t = Thread(target=c.run, args=(10,))
+        t.start()
+        c.terminate()  # Signal termination
+        t.join()  # Wait for actual termination (if needed)
+
+    @staticmethod
+    def scheduling_a_io_thread():
+        """
+        如果线程执行一些 I/O 这样的阻塞操作，并阻塞在一个操作上，就无法返回，也就无法检查
+        自己被结束了，需要使用超时来小心操作线程
+        :return:
+        """
+        from socket import socket, AF_INET, SOCK_STREAM
+
+        class IOTask:
+            def __init__(self):
+                self._running = True
+
+            def terminate(self):
+                self._running = False
+
+            def run(self, sock):
+                import socket
+                # sock is a socket
+                sock.settimeout(5)  # Set timeout period
+                while self._running:
+                    # Perform a blocking I/O operation w/ timeout
+                    try:
+                        data = sock.recv(8192)
+                        print(data)
+                        break
+                    except socket.timeout:
+                        print('timeout.....')
+                        continue
+                    except Exception as e:
+                        print(str('yuwei:111' + str(e)))
+                    # Continued processing
+                    ...
+                # Terminated
+                return
+
+        def echo_server(address, backlog=5):
+            from socket import socket
+            sock = socket(AF_INET, SOCK_STREAM)
+            sock.bind(address)
+            sock.listen(backlog)
+            print('111111')
+            while True:
+                client_sock, client_addr = sock.accept()
+                ioTask = IOTask()
+                print('222222')
+                ioTask.run(client_sock)
+
+        echo_server(('', 20000))
 
 
 def multi_thread_download():
@@ -149,7 +227,7 @@ class FuturesStudy(object):
     as_completed(fs) -> 给定 future 迭代器 fs，在完成后，返回完成后的迭代器
     """
 
-    @ staticmethod
+    @staticmethod
     def study_futures():
         import concurrent.futures
         import requests
@@ -176,7 +254,6 @@ class FuturesStudy(object):
                 for i in test_list:
                     print(i)
 
-
         def main():
             sites = [
                 'https://en.wikipedia.org/wiki/Portal:Arts',
@@ -202,6 +279,7 @@ class FuturesStudy(object):
                                                            end_time - start_time))
             # future 列表中每个 future 完成的顺序，和在列表的顺序不一定完全一致。完成
             # 的时间，取决于系统的调度和每个future 的执行时间。
+
         main()
 
 
@@ -235,9 +313,10 @@ class Python2Thread(object):
 
         multithreading()
 
+
+import multiprocessing
 # multi process start
 import time
-import multiprocessing
 
 
 def cpu_bound(number):
@@ -247,18 +326,28 @@ def cpu_bound(number):
 def find_sums(numbers, cpu_bound):
     with multiprocessing.Pool() as pool:
         pool.map(cpu_bound, numbers)
+
+
 # multi process end
 
 
 if __name__ == '__main__':
-
     studyThread = StudyThread()
     # studyThread.single_thread_download()
     # studyThread.start_a_thread()
-    studyThread.start_a_daemon_thread()
+
+    # python 开启 daemon 线程，daemon 线程会随着主线程的关闭而关闭
+    # StudyThread.start_a_daemon_thread()
+
+    # python 调度线程
+    # StudyThread.scheduling_a_thread()
+
+    # 调度一个可阻塞的线程
+    StudyThread.scheduling_a_io_thread()
+
+    # 调度 IO 线程
 
 
-    #
     # multi_thread_download()
     #
     # FuturesStudy.study_futures()
