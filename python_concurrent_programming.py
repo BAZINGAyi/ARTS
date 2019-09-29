@@ -158,6 +158,147 @@ class StudyThread(object):
 
         echo_server(('', 20000))
 
+    @staticmethod
+    def get_the_state_of_a_running_thread():
+        """
+        Question: 线程同步(通信)问题
+        线程的一个关键特性是每个线程都是独立运行且状态不可预测。
+        如果程序中的其他线程需要通过判断某个线程的状态来确定自己下一步的操作，这时线程同步
+        问题就会变得非常棘手。
+
+        Answer:
+        为了解决这些问题，我们需要使用 threading 库中的 Event 对象。 Event 对象
+        包含一个可由线程设置的信号标志，它允许线程等待某些事件的发生。
+
+        event 对象的特定点是当被设置为真时，会唤醒所有等待它的线程。
+
+        Notice:
+        event 对象最好单次使用，在创建 event 对象后，让某个线程等待这个对象，一旦这个对象
+        被设置为真，就应该丢弃它。尽管可以通过 clear() 方法来重置 event，但很难保证安全地
+        清理 event 对象，很可能发生错过时间，死锁或者其他问题(无法保证重置 event 对象的
+        代码会在线程再次等待这个 event 对象之前执行)
+
+        如果一个线程不停需要重复使用 event 对象，最好使用 Condition 对象来代替。
+        :return:
+        """
+        from threading import Thread, Event
+        import time
+
+        # Code to execute in an independent thread
+        def countdown(n, started_evt: Event):
+            started_evt.wait()
+            print('countdown starting')
+            while n > 0:
+                print('T-minus', n)
+                n -= 1
+                time.sleep(2)
+
+        # Create the event object that will be used to signal startup
+        started_evt = Event()
+
+        # Launch the thread and pass the startup event
+        print('Launching countdown')
+        t = Thread(target=countdown, args=(10, started_evt))
+        t.start()
+        # 在主线程 sleep 5s 后，启动子线程
+        time.sleep(5)
+        started_evt.set()
+        # Wait for the thread to start
+        print('countdown is running')
+
+    @staticmethod
+    def thread_synchronization_problem_by_condition():
+        """
+        Question: event对象的一个重要特点是当它被设置为真时会唤醒所有等待它的线程。
+        如果你只想唤醒单个线程，最好是使用信号量或者 Condition 对象来替代.
+
+        下面的例子中 PeriodTimer 中作为线程间的控制器，每当 Condition 发生变化时，
+        countdown 和 countup 两个线程运行并计算
+        :return:
+        """
+        import threading
+        import time
+
+        class PeriodicTimer:
+            def __init__(self, interval):
+                self._interval = interval
+                self._flag = 0
+                self._cv = threading.Condition()
+
+            def start(self):
+                t = threading.Thread(target=self.run)
+                t.daemon = True
+
+                t.start()
+
+            def run(self):
+                '''
+                Run the timer and notify waiting threads after each interval
+                '''
+                while True:
+                    time.sleep(self._interval)
+                    with self._cv:
+                        self._flag ^= 1
+                        self._cv.notify_all()
+
+            def wait_for_tick(self):
+                '''
+                Wait for the next tick of the timer
+                '''
+                with self._cv:
+                    last_flag = self._flag
+                    while last_flag == self._flag:
+                        self._cv.wait()
+
+        # Example use of the timer
+        ptimer = PeriodicTimer(5)
+        ptimer.start()
+
+        # Two threads that synchronize on the timer
+        def countdown(nticks):
+            while nticks > 0:
+                ptimer.wait_for_tick()
+                print('T-minus', nticks)
+                nticks -= 1
+
+        def countup(last):
+            n = 0
+            while n < last:
+                ptimer.wait_for_tick()
+                print('Counting', n)
+                n += 1
+
+        threading.Thread(target=countdown, args=(10,)).start()
+        threading.Thread(target=countup, args=(5,)).start()
+
+    @staticmethod
+    def thread_synchronization_problem_by_sema():
+        """
+        这是因为所有的线程都在等待获取信号量。每次信号量被释放，只有一个线程会被唤醒并执行.
+        :return:
+        """
+        import threading
+
+        # Worker thread
+        def worker(n, sema):
+            # Wait to be signaled
+            sema.acquire()
+
+            # Do some work
+            print('Working', n)
+
+        # Create some threads
+        sema = threading.Semaphore(0)
+        nworkers = 10
+        for n in range(nworkers):
+            t = threading.Thread(target=worker, args=(n, sema,))
+            t.start()
+
+        #
+        sema.release()
+        sema.release()
+        sema.release()
+
 
 def multi_thread_download():
     import concurrent.futures
@@ -342,11 +483,15 @@ if __name__ == '__main__':
     # python 调度线程
     # StudyThread.scheduling_a_thread()
 
-    # 调度一个可阻塞的线程
-    StudyThread.scheduling_a_io_thread()
+    # 调度一个可阻塞的 IO 线程
+    # StudyThread.scheduling_a_io_thread()
 
-    # 调度 IO 线程
+    # 判断线程是否已经启动
+    # StudyThread.get_the_state_of_a_running_thread()
 
+    # 使用 Condition 对象来控制线程间的运行
+    # StudyThread.thread_synchronization_problem_by_condition()
+    StudyThread.thread_synchronization_problem_by_sema()
 
     # multi_thread_download()
     #
