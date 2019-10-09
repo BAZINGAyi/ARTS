@@ -294,10 +294,127 @@ class StudyThread(object):
             t = threading.Thread(target=worker, args=(n, sema,))
             t.start()
 
-        #
+        # 线程被唤醒的顺序与线程启动时的顺序无关
         sema.release()
         sema.release()
         sema.release()
+
+    @staticmethod
+    def production_consumption_model_realized_by_queue():
+        """
+        Question: 在多个线程中，安全地交换信息或者数据
+
+        Answer: 使用 Queue 对象，在多个线程中共享，使用 put() 或者 get() 来添加或者
+        删除元素
+        """
+
+        from queue import Queue
+        from threading import Thread
+
+        # A thread that produces data
+        def producer(out_q):
+            while True:
+                # Produce some data
+                data = [1, 2, 3]
+                out_q.put(data)
+
+        # A thread that consumes data
+        def consumer(in_q):
+            while True:
+                # Get some data
+                data = in_q.get()
+                # Process the data
+                print(data)
+                ...
+
+        # Create the shared queue and launch both threads
+        q = Queue()
+        t1 = Thread(target=consumer, args=(q,))
+        t2 = Thread(target=producer, args=(q,))
+        t1.start()
+        t2.start()
+
+    @staticmethod
+    def the_close_problem_of_production_consumption_model():
+        """
+        根据一些条件来关闭生产者和消费者.
+
+        通过设置一个特殊值，其中一个消费者读到这个值后，把这个特殊值再次放到队列中，然后将
+        自己关闭，这样所有监听这个队列的消费者线程都可以全部关闭了
+        :return:
+        """
+
+        from queue import Queue
+        from threading import Thread
+
+        # Object that signals shutdown
+        _sentinel = object()
+
+        # A thread that produces data
+        def producer(out_q):
+            count = 10
+            data = []
+            while count > 0:
+                # Produce some data
+                import copy
+                data.append(count)
+                data_copy = copy.deepcopy(data)
+                out_q.put(data_copy)
+                count -= 1
+
+            # Put the sentinel on the queue to indicate completion
+            out_q.put(_sentinel)
+
+        # A thread that consumes data
+        def consumer(in_q, consumer_name):
+            while True:
+                # Get some data
+                data = in_q.get()
+                print(consumer_name + ':', data)
+
+                # Check for termination
+                if data is _sentinel:
+                    in_q.put(_sentinel)
+                    print(consumer_name + ': close consumer')
+                    break
+
+                # Proc
+
+        q = Queue()
+        c1 = Thread(target=consumer, args=(q, 'consumer_name1'))
+        c2 = Thread(target=consumer, args=(q, 'consumer_name2'))
+        p1 = Thread(target=producer, args=(q,))
+        c1.start()
+        c2.start()
+        p1.start()
+
+    @staticmethod
+    def implements_a_thread_safe_priority_queue():
+        """
+        Question: 手动实现一个线程安全的优先队列
+        Answer: 使用 Condition 来包装数据结构
+        :return:
+        """
+        import heapq
+        import threading
+
+        class PriorityQueue:
+            def __init__(self):
+                self._queue = []
+                self._count = 0
+                self._cv = threading.Condition()
+
+            def put(self, item, priority):
+                with self._cv:
+                    heapq.heappush(self._queue, (-priority, self._count, item))
+                    self._count += 1
+                    self._cv.notify()
+
+            def get(self):
+                with self._cv:
+                    while len(self._queue) == 0:
+                        self._cv.wait()
+                    return heapq.heappop(self._queue)[-1]
 
 
 def multi_thread_download():
@@ -491,7 +608,13 @@ if __name__ == '__main__':
 
     # 使用 Condition 对象来控制线程间的运行
     # StudyThread.thread_synchronization_problem_by_condition()
-    StudyThread.thread_synchronization_problem_by_sema()
+    # 使用信号量来唤醒线程
+    # StudyThread.thread_synchronization_problem_by_sema()
+
+    # 多线程间通信 - 生产消费模型
+    # StudyThread.production_consumption_model_realized_by_queue()
+    # 生产者和消费者的关闭问题
+    StudyThread.the_close_problem_of_production_consumption_model()
 
     # multi_thread_download()
     #
