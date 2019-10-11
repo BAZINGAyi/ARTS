@@ -286,6 +286,10 @@ class ProducerAndConsumerModel(object):
 
         Answer: 使用 Queue 对象，在多个线程中共享，使用 put() 或者
          get() 来添加或者删除元素. 注意 put 和 get 的阻塞情况
+
+        进行 put() 操作时：线程间通信实际上是线程间传递对象引用。如果担心对象的共享状态，
+        可以选用 immutable 的数据结构，或者对 mutable 进行拷贝
+
         """
 
         from queue import Queue
@@ -473,6 +477,41 @@ class ProducerAndConsumerModel(object):
 
         # Wait for all produced items to be consumed
         q.join()
+
+    @staticmethod
+    def consumer_notify_producer():
+        """
+        如果一个线程需要在一个“消费者”线程处理完特定的数据项时立即得到通知，你可以把要发送
+        的数据和一个 Event 放到一起使用，这样“生产者”就可以通过这个Event对象来监测处理的
+        过程了
+        :return:
+        """
+        from queue import Queue
+        from threading import Thread, Event
+
+        # A thread that produces data
+        def producer(out_q):
+            running = True
+            while running:
+                # Produce some data
+                ...
+                # Make an (data, event) pair and hand it to the consumer
+                evt = Event()
+                data = 1
+                out_q.put((data, evt))
+                ...
+                # Wait for the consumer to process the item
+                evt.wait()
+
+        # A thread that consumes data
+        def consumer(in_q):
+            while True:
+                # Get some data
+                data, evt = in_q.get()
+                # Process the data
+                ...
+                # Indicate completion
+                evt.set()
 
 
 class ThreadDemo(object):
@@ -801,32 +840,25 @@ if __name__ == '__main__':
     # 保持运行：P 和 C 为正常线程
     # ProducerAndConsumerModel.production_consumption_model_realized_by_queue()
 
-    # Queue - 通过设置一些特殊值，来关闭所有的消费者
-    # ProducerAndConsumerModel.the_close_problem_of_production_consumption_model()
-
-    # Queue - 实现线程安全的优先队列
-    # ProducerAndConsumerModel.implements_a_thread_safe_priority_queue()
-
     # Queue - 生产消费模型2: 待生产的数据已知，可以直接使用 queue.join 来判定任务的完成
     # ThreadDemo.download_and_process_data_at_the_same_time()
 
-    # Queue - 生产消费模型3: 带生产的数据未知，同时产生和消费数据，根据特定的条件结束
+    # Queue - 生产消费模型3: 待生产的数据未知，同时产生和消费数据，根据特定的条件结束
     # 1. 消费的速度大于生产的速度，使用 producer.join 来保证所有的生产任务已经完成。
     # 否则就会出现新的任务还没加到队列中，queue.join 无法被阻塞的情况，致使任务退出
     # 2. 生产大于消费的速度，同样给队列设置上限，到达上限生产者被阻塞，等待消费者完成
     # 后再发送
     # ProducerAndConsumerModel.indicates_the_status_of_the_queue_completion()
 
-    # 使用多线程下载多个任务并使用多线程消费，使用 queue
-    # 生产消费问题1： 多个生产者先产生所有数据，多个消费者进行消费，然后结束：
-    # p 为正常线程 c 和 daemon 线程，使用 q.join 和 q.task_done 来表明任务已经完成
+    # Queue - 通过设置一些特殊值，来关闭所有的消费者
+    # ProducerAndConsumerModel.the_close_problem_of_production_consumption_model()
 
-    # 生产消费问题2： 同时产生和消费数据，保持运行：P 和 C 为正常线程
+    # Queue - 实现线程安全的优先队列
+    # ProducerAndConsumerModel.implements_a_thread_safe_priority_queue()
 
-    # 生产消费问题3： 同时产生和消费数据，根据特定的条件结束
-    # 消费的速度大于生产的速度，使用 q.join 来判断时所有的任务已经完成，
-    # 但新的任务还没加到队列中，指示任务退出. 所以需要等待所有的生产者结束
-    # 生产大于消费的速度，同样给队列设置上限，到达上限生产者被阻塞，等待消费者完成后再发送
+    # Queue - 当消费者完成一个任务后，让生产者得到通知
+    ProducerAndConsumerModel.consumer_notify_producer()
+
 
     # Futures 是对 threading 和 multiprocessing 的进一步抽象，
     # 使开发者只需编写少量代码即可让程序实现并行计算。
