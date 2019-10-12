@@ -513,6 +513,52 @@ class ProducerAndConsumerModel(object):
                 # Indicate completion
                 evt.set()
 
+    @staticmethod
+    def avoid_infinite_blocking():
+        """
+        q = queue.Queue()
+
+        try:
+            data = q.get(block=False)
+        except queue.Empty:
+            ...
+
+        try:
+            q.put(item, block=False)
+        except queue.Full:
+            ...
+
+        try:
+            data = q.get(timeout=5.0)
+        except queue.Empty:
+        ...
+        :return:
+        """
+
+        # 非阻塞的 put 方法和固定大小的队列一起使用时，在队列已满的情况下执行不同的策略
+        import queue
+        def producer(q):
+            ...
+            item = []
+            try:
+                q.put(item, block=False)
+            except queue.Full:
+                ...
+                # 如记录 log 等
+                # log.warning('queued item %r discarded!', item)
+
+        # 使用 get 操作时，超过规定的时间，做出不同的处理
+        _running = True
+
+        def consumer(q):
+            while _running:
+                try:
+                    item = q.get(timeout=5.0)
+                    # Process item
+                    ...
+                except queue.Empty:
+                    pass
+
 
 class ThreadDemo(object):
     @staticmethod
@@ -802,6 +848,111 @@ class Python2Thread(object):
         multithreading()
 
 
+class StudyLocking(object):
+
+    @staticmethod
+    def handle_shared_object():
+        """
+        Lock 对象和 with 语句块一起使用可以保证互斥执行，就是每次只有一个线程可以执行
+        with 语句包含的代码块。with 语句会在这个代码块执行前自动获取锁，
+        在执行结束后自动释放锁。
+        :return:
+        """
+        import threading
+
+        class SharedCounter:
+            '''
+            A counter object that can be shared by multiple threads.
+            '''
+
+            def __init__(self, initial_value=0):
+                self._value = initial_value
+                self._value_lock = threading.Lock()
+
+            def incr(self, delta=1):
+                '''
+                Increment the counter with locking
+                '''
+                with self._value_lock:
+                    self._value += delta
+
+            def decr(self, delta=1):
+                '''
+                Decrement the counter with locking
+                '''
+                with self._value_lock:
+                    self._value -= delta
+
+            def print_value(self):
+                print(self._value)
+
+        def incr_value(shared_counter: SharedCounter, counts):
+            while counts > 0:
+                shared_counter.incr()
+                counts -= 1
+
+        shared_counter = SharedCounter(0)
+        from threading import Thread
+        t1 = Thread(target=incr_value, args=(shared_counter, 10000,))
+        t2 = Thread(target=incr_value, args=(shared_counter, 10000,))
+        t1.start()
+        t2.start()
+        t1.join()
+        t2.join()
+        print(shared_counter.print_value())
+
+    @staticmethod
+    def handle_shared_object1():
+        """
+        老的写法
+        :return:
+        """
+        import threading
+
+        class SharedCounter:
+            '''
+            A counter object that can be shared by multiple threads.
+            '''
+
+            def __init__(self, initial_value=0):
+                self._value = initial_value
+                self._value_lock = threading.Lock()
+
+            def incr(self, delta=1):
+                '''
+                Increment the counter with locking
+                '''
+                self._value_lock.acquire()
+                self._value += delta
+                self._value_lock.release()
+
+            def decr(self, delta=1):
+                '''
+                Decrement the counter with locking
+                '''
+                self._value_lock.acquire()
+                self._value -= delta
+                self._value_lock.release()
+
+            def print_value(self):
+                print(self._value)
+
+        def incr_value(shared_counter: SharedCounter, counts):
+            while counts > 0:
+                shared_counter.incr()
+                counts -= 1
+
+        shared_counter = SharedCounter(0)
+        from threading import Thread
+        t1 = Thread(target=incr_value, args=(shared_counter, 10000,))
+        t2 = Thread(target=incr_value, args=(shared_counter, 10000,))
+        t1.start()
+        t2.start()
+        t1.join()
+        t2.join()
+        print(shared_counter.print_value())
+
+
 if __name__ == '__main__':
 
     # python2 中，保证线程安全的队列使用
@@ -857,19 +1008,24 @@ if __name__ == '__main__':
     # ProducerAndConsumerModel.implements_a_thread_safe_priority_queue()
 
     # Queue - 当消费者完成一个任务后，让生产者得到通知
-    ProducerAndConsumerModel.consumer_notify_producer()
+    # ProducerAndConsumerModel.consumer_notify_producer()
 
+    # Queue - 避免无限阻塞的情况
+    # ProducerAndConsumerModel.avoid_infinite_blocking()
 
     # Futures 是对 threading 和 multiprocessing 的进一步抽象，
     # 使开发者只需编写少量代码即可让程序实现并行计算。
     # FuturesStudy.study_futures()
     # FuturesStudy.multi_thread_download()
 
+    # Locking
+    StudyLocking.handle_shared_object1()
+
     # 实际应用
     # 单线程下载网页
     # ThreadDemo.single_thread_download()
 
     # 多线程下载网页，多线程处理内容
-    ThreadDemo.download_and_process_data_at_the_same_time()
+    # ThreadDemo.download_and_process_data_at_the_same_time()
 
 
