@@ -23,17 +23,6 @@ import string
 
 class Solution:
     def isAnagram(self, s: str, t: str) -> bool:
-        """
-        初始化一个 hash table 用于表示字母的出现个数。
-        首先遍历第一个数组时，将对应字母出现个数加1。
-        接着遍历第二个数组，将对应字母的出现个数减1。
-
-
-        and we traversed the the string of "s" to plus 1 for the counts of current index alphabet
-        :param s:
-        :param t:
-        :return:
-        """
         # get all lower alphabets
         lower_alphabets = string.ascii_lowercase
 
