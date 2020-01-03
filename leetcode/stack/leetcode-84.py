@@ -62,10 +62,13 @@ class Solution:
             else:
                 popped_position = heights_position.pop()
                 # get the continuous area of the smallest rectangle
+                # index represents the the number of elements has been processed
                 if len(heights_position) == 0:
                     max_area = max(max_area, index * heights[popped_position])
                 # Get maximum area of rectangle in monotonically increasing
                 else:
+                    # index need to reduce 1 because the we add a 0
+                    #  to the end of heights array.
                     max_area = max(max_area,
                                    (index - 1 - heights_position[-1]) * heights[popped_position])
         return max_area
@@ -73,9 +76,10 @@ class Solution:
 
 if __name__ == '__main__':
     soluction = Solution()
-    print(soluction.largestRectangleArea_old([2, 1, 5, 6, 2, 3]))
-    print(soluction.largestRectangleArea_old([2, 1, 2]))
+    #print(soluction.largestRectangleArea_old([2, 1, 5, 6, 2, 3]))
+    #print(soluction.largestRectangleArea_old([2, 1, 2]))
 
-    print(soluction.largestRectangleArea([1, 2, 3, 1, 2, 3]))
-    print(soluction.largestRectangleArea([2, 1, 2]))
-    print(soluction.largestRectangleArea([4,2,0,3,2,5]))
+    #print(soluction.largestRectangleArea([1, 2, 3, 1, 2, 3]))
+    #print(soluction.largestRectangleArea([2, 1, 2]))
+    #print(soluction.largestRectangleArea([4,2,0,3,2,5]))
+    print(soluction.largestRectangleArea([2,2,2,0,2,2,2]))
